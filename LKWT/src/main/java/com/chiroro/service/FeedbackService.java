@@ -3,6 +3,7 @@ package com.chiroro.service;
 import org.springframework.stereotype.Service;
 
 import com.chiroro.domain.AnswerAndAnsCommentVO;
+import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
@@ -16,7 +17,7 @@ public interface FeedbackService {
 	public void addAnswer(AnswerAndAnsCommentVO vo);
 	
 	//피드백 목록
-	public PageDTO<?> getQuestionList(PagingSource source);
+	public PageDTO<QuestionListVO> getQuestionList(PagingSource source);
 	
 	//피드백 가져오기
 	public QuestionVO getQuestion();

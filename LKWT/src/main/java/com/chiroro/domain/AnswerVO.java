@@ -1,5 +1,13 @@
 package com.chiroro.domain;
 
-public class AnswerVO {
+import java.util.Date;
 
+import lombok.Data;
+
+@Data
+public class AnswerVO {
+	private Long qno, ano;
+	private String username;
+	private Integer indicator;
+	private Date regDate;
 }
