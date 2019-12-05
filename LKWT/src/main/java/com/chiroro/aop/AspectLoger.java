@@ -15,17 +15,17 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class AspectLoger {
 	
-//	@Before("execution(* com.chiroro.service.*.*(..))")
-//	public void beforeServiceLog(JoinPoint jp) {
-//		log.info(jp.getTarget()+"-------------------------------before");
-//		log.info("\tSignature: "+jp.getSignature());
-//		log.info("\tArgs: "+Arrays.toString(jp.getArgs()));
-//	}
-//	
-//	@AfterReturning(pointcut = "execution(* com.chiroro.service.*.*(..))", returning = "retVal")
-//	public void afterServiceLog(JoinPoint jp, Object retVal) {
-//		log.info(jp.getTarget()+"--------------------------------after");
-//		log.info("\tSignature: "+jp.getSignature());
-//		log.info("\treturn: "+retVal);
-//	}
+	@Before("execution(* com.chiroro.service.*.*(..))")
+	public void beforeServiceLog(JoinPoint jp) {
+		log.info(jp.getTarget()+"-------------------------------before");
+		log.info("\tSignature: "+jp.getSignature());
+		log.info("\tArgs: "+Arrays.toString(jp.getArgs()));
+	}
+	
+	@AfterReturning(pointcut = "execution(* com.chiroro.service.*.*(..))", returning = "retVal")
+	public void afterServiceLog(JoinPoint jp, Object retVal) {
+		log.info(jp.getTarget()+"--------------------------------after");
+		log.info("\tSignature: "+jp.getSignature());
+		log.info("\treturn: "+retVal);
+	}
 }

@@ -15,17 +15,20 @@
 		WHERE qno = #{qno}
 	</select>
 	
-	<select id="selectList" resultMap="QeustionListVO">
-		SELECT q.qno, cno, category, content, q.regdate, COUNT(ano) rate, CAST(AVG(indicator) AS signed integer) avg
+	<select id="selectList" resultMap="QeustionListMap">
+		SELECT  q.qno, min(cno) cno, min(category) category,  min(content) content,  min(q.regdate) regdate,
+			 CAST((COUNT(ano) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate,
+			 CAST(AVG(indicator) AS signed integer) avg
 		FROM question q
-		LEFT OUTER
-		JOIN answer a ON q.qno = a.qno
+		LEFT JOIN answer a ON q.qno = a.qno
+		WHERE q.cno = #{no}
 		GROUP BY q.qno
-		ORDER BY qno DESC
+		ORDER BY q.qno DESC
 		LIMIT #{limit}, #{amount}
 	</select>
 	
-	<resultMap type="com.chiroro.domain.QuestionListVO" id="QeustionListVO">
+	<resultMap type="com.chiroro.domain.QuestionListVO" id="QeustionListMap">
+	
 		<result column="rate" property="responseRate"/>
 		<result column="avg" property="avgAnswer"/>
 		<association property="question" javaType="com.chiroro.domain.QuestionVO">
@@ -35,6 +38,14 @@
 			<result column="regdate" property="regDate"/>
 			<result column="category" property="category"/>
 		</association>
+		
 	</resultMap>
+	
+	<select id="selectTotal" resultType="long">
+		SELECT count(q.qno)
+		FROM question q
+		WHERE q.cno = #{no}
+		ORDER BY q.qno DESC
+	</select>
 	
 </mapper>

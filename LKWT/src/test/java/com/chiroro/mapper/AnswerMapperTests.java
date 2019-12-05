@@ -1,6 +1,10 @@
 package com.chiroro.mapper;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,8 +30,7 @@ public class AnswerMapperTests {
 	@Before
 	public void ready() {
 		vo = new AnswerVO();
-		vo.setQno(1L);
-		vo.setUsername("tester");
+		vo.setQno(300L);
 	}
 	
 	@Test
@@ -37,10 +40,33 @@ public class AnswerMapperTests {
 	
 	@Test
 	public void insert() {
-		for(int i=0; i<31; i++) {
-			vo.setIndicator(25*(int)(Math.random()*5));
-			
-			mapper.insert(vo);
-		}
+		//LastInsert id
 	}
+	
+	@Test
+	public void selectJoinedList() {
+		List<?> list = mapper.selectJoinedList(300L);
+		
+		list.forEach(log::info);
+	}
+	
+	@Test
+	public void checkExist() {
+		AnswerVO ans = mapper.selectOne(3);
+		
+		ans.setIndicator(44);
+		
+		boolean bool = mapper.isExist(ans);
+		log.info(bool+"\t isExist True");
+		assertTrue(bool);
+		
+		ans.setUsername("$fakeUser");
+		
+		bool = mapper.isExist(ans);
+		
+		log.info(bool+"\t isExist False");
+		
+		assertFalse(bool);
+	}
+	
 }

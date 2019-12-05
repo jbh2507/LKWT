@@ -42,7 +42,7 @@ public class QuestionMapperTests {
 	
 	@Test
 	public void insertTest() {
-
+		
 		vo.setContent("test Q");
 			
 		mapper.insert(vo);
@@ -61,10 +61,17 @@ public class QuestionMapperTests {
 	public void selectList() {
 		PagingSource source = new PagingSource();
 		source.setPage(1);
-		source.setAmount(1);
+		source.setAmount(10);
+		source.setNo(1L);
 		
 		List<QuestionListVO> list = mapper.selectList(source);
 		
-		list.stream().forEach(log::info);
+		log.info("====================================");
+		log.info(list);
+		
+		list.stream().forEach(vo -> {
+			log.info(vo);
+			log.info("==================");	
+		});
 	}
 }

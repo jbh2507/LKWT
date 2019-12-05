@@ -6,7 +6,7 @@
 <mapper namespace="com.chiroro.mapper.AnswerMapper">
 	<insert id="insert">
 		INSERT INTO answer(qno, username, indicator)
-		VALUES(#{qno},#{indicator},#{answer})
+		VALUES(#{qno},#{username},#{indicator})
 	</insert>
 	
 	<select id="selectOne" resultType="com.chiroro.domain.AnswerVO">
@@ -14,4 +14,24 @@
 		FROM answer
 		WHERE ano = #{ano}
 	</select>
+	
+	<select id="selectJoinedList" resultMap="AnswerAndAnsCommentMap">
+		SELECT *
+		FROM answer a
+		LEFT JOIN ans_comment c ON a.ano = c.ano
+		WHERE a.qno = #{no}
+	</select>
+	
+	<resultMap type="com.chiroro.domain.AnswerAndAnsCommentVO" id="AnswerAndAnsCommentMap">
+		<association property="answer" autoMapping="true"></association>
+		<association property="ansComment" autoMapping="true"></association>
+	</resultMap>
+	
+	<select id="isExist" resultType="boolean">
+		SELECT count(ano)
+		FROM answer
+		WHERE qno = #{qno}
+		AND username = #{username}
+	</select>
+	
 </mapper>

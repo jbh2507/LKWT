@@ -1,5 +1,9 @@
 package com.chiroro.domain;
 
-public class AnsCommentVO {
+import lombok.Data;
 
+@Data
+public class AnsCommentVO {
+	private String tag, comment;
+	private Long ano;
 }

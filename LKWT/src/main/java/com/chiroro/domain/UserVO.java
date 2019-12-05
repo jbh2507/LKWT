@@ -1,5 +1,8 @@
 package com.chiroro.domain;
 
-public class UserVO {
+import lombok.Data;
 
+@Data
+public class UserVO {
+	private String userName, password;
 }
