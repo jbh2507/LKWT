@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7a3ec56d-0896-4996-a838-2a5a5b67bc65" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../LKWT/target/m2e-wtp/web-resources/META-INF/maven/com.chiroro/controller/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../LKWT/target/m2e-wtp/web-resources/META-INF/maven/com.chiroro/controller/pom.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wrapper.html" beforeDir="false" afterPath="$PROJECT_DIR$/wrapper.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -72,6 +71,8 @@
       <workItem from="1575288946700" duration="3030000" />
       <workItem from="1575332850494" duration="404000" />
       <workItem from="1575349743389" duration="604000" />
+      <workItem from="1575597128355" duration="634000" />
+      <workItem from="1575598240594" duration="42000" />
     </task>
     <servers />
   </component>
