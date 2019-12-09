@@ -16,7 +16,7 @@
 	</select>
 	
 	<select id="selectList" resultMap="QeustionListMap">
-		SELECT  q.qno, min(cno) cno, min(category) category,  min(content) content,  min(q.regdate) regdate,
+		SELECT  q.qno, cno cno, category category,  content content,  q.regdate regdate,
 			 CAST((COUNT(ano) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate,
 			 CAST(AVG(indicator) AS signed integer) avg
 		FROM question q
@@ -28,7 +28,7 @@
 	</select>
 	
 	<resultMap type="com.chiroro.domain.QuestionListVO" id="QeustionListMap">
-	
+		<id column="qno" property="question.qno"/>
 		<result column="rate" property="responseRate"/>
 		<result column="avg" property="avgAnswer"/>
 		<association property="question" javaType="com.chiroro.domain.QuestionVO">
