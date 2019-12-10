@@ -148,15 +148,16 @@
   </div>
   <!-- End of Page Wrapper -->
   
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/d3.v5.min.js"></script>
 
-<script src="/resources/js/pie.js"></script>
+<script src="/resources/js/chart-pie.js"></script>
 
-<script type="text/javascript">
-
+<script>
 $(document).ready(function() {
 	var $pop = $("#questionPop");
 	var $ans = $("#ans");
+	var $pie = $("#pie");
+	var data = [];
 	
 	function callAnswerList(qno){
 		$.ajax({
@@ -166,57 +167,58 @@ $(document).ready(function() {
 			success: function (result) {
 				var answerForm = "";
 				
-				var ans = [{name:0, value:0},
-					{name:25, value:0},
-					{name:50, value:0},
-					{name:75, value:0},
-					{name:100, value:0}];
+				data = [{name:0, value:0, color: '#B40404'},
+					{name:25, value:0, color: '#FF0000'},
+					{name:50, value:0, color: '#FF8000'},
+					{name:75, value:0, color: '#FFFF00'},
+					{name:100, value:0, color: '#BFFF00'}];
 				
-				var sum = 0;
-				var counter = 0;
 				
 				for(let i=0; i<result.length; i++){
 					let an = result[i];
 					
 					answerForm +=
-						"<div class='row'><div class='col-sm-12 col-md-2'><img src='/resources/img/usericon.png' style='width: 100%''><p>"
+						"<div class='row'><div class='col-sm-12 col-md-2 text-center'><img src='/resources/img/usericon.png' style='width: 50%'><p >"
 						+an.answer.username
-						+"</p></div><div class='col-sm-12 col-md-10'><div class='row'><div class='col-sm-12 col-md-2'>"
+						+"</p></div><div class='col-sm-12 col-md-10'><div class='row bg-gray-200'><div class='col-sm-12 col-md-2'>"
 		                +an.answer.indicator
-						+"</div><div class='col-sm-12 col-md-10'>"
-						+an.ansComment.comment
-						+"</div></div></div></div>";
+						+"</div><div class='col-sm-12 col-md-10'>";
 						
-					for(let i=0; i<ans.length; i++){
-						if(ans[i].name == an.answer.indicator) ans[i].value += 1;
+					if(an.ansComment.comment != null) answerForm += an.ansComment.comment;
+					
+					answerForm += "</div></div></div></div>";
+						
+					for(let i=0; i<data.length; i++){
+						if(data[i].name == an.answer.indicator) data[i].value += 1;
 					}
-					sum += an.answer.indicator;
-					counter += 1;
-						
 						
 				}
 				
-				console.log(ans);
-				console.log(sum);
-				console.log(counter);
+				console.log(data);
 				
-				createPie('#pie', ans, 200);
+				$pie.html("");
+				createPie('#pie', data);
 				
 				$ans.html(answerForm);
 				
 			}
 		});
 	};
-	
+	var $qContent = $('#qContent');
+	var $qContent2 = $('#qContent2');
+	var $qRegDate = $('#qRegDate');
+	var $qCategory = $('#qCategory');
 	function callQuestion(qno){
 		$.ajax({
 			url:"/feedback/question/"+qno,
 			type:"GET",
 			dataType:"json",
 			success: function (result) {
-				
-				<c:set var="qvo" value="result"/>
-				console.log(${qvo});
+				 $qContent.text(result.content);
+				 $qContent2.text(result.content);
+				 $qCategory.text("["+result.category+"]");
+				 $qRegDate.text(new Date(result.regDate).toLocaleDateString());
+				console.log(result);
 			}
 		});
 	};
@@ -226,6 +228,7 @@ $(document).ready(function() {
 		e.preventDefault();
 	
 		var addr = "board?no="+${pageDTO.source.no}+"&page="+$(this).attr("href");
+		
 		<c:if test="${pageDTO.source.amount != null}">addr += "&amount="+${pageDTO.source.amount};</c:if>
 		<c:if test="${pageDTO.source.category != null}">addr += "&category="+${pageDTO.source.category};</c:if>
 		<c:if test="${pageDTO.source.keyword != null}">addr += "&keyword="+${pageDTO.source.keyword};</c:if>
