@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-    <div id="questionPop" class="card position-absolute" style="transform:translate(-50%, -50%); top:50%; left:50%; width: 75vw; display: none;">
+<div id="questionPop" class="position-fixed" style="background-color: rgba(0, 0, 0, 0.5); top:0; left:0; display: none; width: 100vw; height: 100vh;">
+    <div class="card position-absolute" style="transform:translate(-50%, -50%); top:50%; left:50%; width: 75vw;">
         <div class="card-header py-3">
             <div class="row">
                 <div class="col-sm-12 col-md-10">
@@ -34,3 +35,4 @@
             </div>
         </div>
     </div>
+</div>

@@ -7,4 +7,6 @@ http.listen(3000, function(){
     console.log('listening on *:3000');
 });
 
-io.on
+io.on("connect", function (){
+    
+});

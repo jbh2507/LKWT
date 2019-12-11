@@ -1,7 +1,6 @@
 const roomManager = (function (){
 
     var roomMapper = {};
-    const lobbyname = null; // 로비를 운용한다면 해당 방 이름 기입 
 
     function joinRoom(roomName, socket){
         // 이미 다른 방에 접속 중이라면 방에 접속을 해제함
@@ -14,7 +13,7 @@ const roomManager = (function (){
 
         if(!socket[curRoom]) socket[curRoom] = [];
         socket[curRoom].push(roomName);
-    };
+    } // joinRoom()
 
     function exitRoom(roomName,socket){
 
@@ -35,9 +34,22 @@ const roomManager = (function (){
                 roomcurRoom.splice(i, 1);
             }
         }
+    } // exitRoom()
+
+    function getRoomMemberNames(roomName){
+        let room = roomMapper[roomName];
+
+        if(!room) return [];
+
+        var result = [];
+        for(let i=0; i<room.length; i++){
+            result.push(room[i].userName);
+        }
+
+        return result;
     }
 
-    return {joinRoom, exitRoom};
+    return {joinRoom, exitRoom, getRoomMemberNames};
 })();
 
 module.exports = roomManager;
