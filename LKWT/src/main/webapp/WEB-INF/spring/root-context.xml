@@ -44,6 +44,11 @@
 		<property name="dataSource" ref="dataSource"></property>
 	</bean>
 	
+	<bean id="contentNegotiationManager"
+             class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="defaultContentType" value="application/json" />
+	</bean>
+	
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	<tx:annotation-driven />
 	

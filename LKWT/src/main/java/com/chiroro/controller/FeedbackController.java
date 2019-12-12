@@ -31,15 +31,15 @@ public class FeedbackController {
 	private FeedbackService service;
 	
 	// question List
-	@GetMapping("/board")
-	public void GETFeedback(PagingSource source, Model model) {
-		log.info(source + "\t controller IN");
+	@GetMapping("/board/{cno}")
+	public String GETFeedback(PagingSource source, @PathVariable Long cno, Model model) {
+		source.setNo(cno);
 		
 		PageDTO<QuestionListVO> pageDTO = service.getQuestionList(source);
 		model.addAttribute("pageDTO",pageDTO);
 		log.info("\tpageDTO: "+pageDTO);
 		
-		
+		return "feedback/board";
 	}
 	
 	// question

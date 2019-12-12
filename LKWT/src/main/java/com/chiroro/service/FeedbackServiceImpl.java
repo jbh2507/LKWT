@@ -23,6 +23,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Service
+@Transactional
 @Log4j
 public class FeedbackServiceImpl implements FeedbackService{
 	
@@ -42,7 +43,6 @@ public class FeedbackServiceImpl implements FeedbackService{
 	}
 
 	@Override
-	@Transactional
 	public void addAnswer(AnswerAndAnsCommentVO vo) {
 		AnswerVO answer = vo.getAnswer();
 		AnsCommentVO comment = vo.getAnsComment();
@@ -61,17 +61,20 @@ public class FeedbackServiceImpl implements FeedbackService{
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public PageDTO<QuestionListVO> getQuestionList(PagingSource source) {
 		
 		return new PageDTO<>(source, questionMapper);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public QuestionVO getQuestion(long qno) {
 		return questionMapper.selectOne(qno);
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public List<AnswerAndAnsCommentVO> getAnswerList(long qno) {
 		
 		return answerMapper.selectJoinedList(qno);

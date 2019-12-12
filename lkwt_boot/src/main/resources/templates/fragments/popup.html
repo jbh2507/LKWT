@@ -1,0 +1,36 @@
+<div id="questionPop" class="position-fixed" style="background-color: rgba(0, 0, 0, 0.5); top:0; left:0; display: none; width: 100vw; height: 100vh;">
+    <div class="card position-absolute" style="transform:translate(-50%, -50%); top:50%; left:50%; width: 75vw;">
+        <div class="card-body" style="margin: 0px; height: 100%;">
+
+            <h5 id="qContent"></h5>
+
+            <div class="row">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+
+            <form id="answerForm">
+                <input type="hidden" name="userName" value="${userName}">
+                <input type="hidden" name="qno" value="#">
+                <input type="hidden" name="indicator;" value="0">
+                <div class="form-group row">
+                    <div class="col-sm-6 col-md-0">
+
+                    </div>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+                <hr>
+                <div class="form-group">
+                        <a href="#" class="btn btn-primary btn-user btn-block">
+                            SUBMIT
+                        </a>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

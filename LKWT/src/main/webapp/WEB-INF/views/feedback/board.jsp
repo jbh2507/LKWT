@@ -54,7 +54,9 @@
             <div class="card-body">
      
               <div style="margin: 10px">
-             	<form action="" class="row">
+              
+             	<form id="questionForm" class="row">
+             	
              	  <div class="col-sm-12 col-md-2">
 	              <select name="category" class="custom-select custom-select-sm form-control form-control-sm">
 	                <option value="이해도">이해도</option>
@@ -68,9 +70,11 @@
                   <label><input type="checkbox" name="yesOrNo">Yes or No</label>
                   </div>
                   <div class="col-sm-12 col-md-3">
-                  <button>요청</button>
+                  <button id="questionBtn">요청</button>
                   </div>
+                  
            	  	</form>
+           	  	
               </div>
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -147,17 +151,54 @@
 
   </div>
   <!-- End of Page Wrapper -->
-  
+
+<script src="/resources/js/socket.io.js"></script>  
 <script src="https://d3js.org/d3.v5.min.js"></script>
 
 <script src="/resources/js/chart-pie.js"></script>
 
 <script>
 $(document).ready(function() {
-	var $pop = $("#questionPop");
-	var $ans = $("#ans");
-	var $pie = $("#pie");
+	const $pop = $("#questionPop");
+	const $ans = $("#ans");
+	const $pie = $("#pie");
+	
+	const $qContent = $('#qContent');
+	const $qContent2 = $('#qContent2');
+	const $qRegDate = $('#qRegDate');
+	const $qCategory = $('#qCategory');
+	
+	
 	var data = [];
+	
+	const socket = io("http://localhost:3000");
+	
+	function addQuestion(question){
+		socket.emit("question", question);
+	}
+	
+	function addAnswer(an){
+		var answerForm =
+			"<div class='row'><div class='col-sm-12 col-md-2 text-center'><img src='/resources/img/usericon.png' style='width: 50%'><p >"
+			+an.answer.username
+			+"</p></div><div class='col-sm-12 col-md-10'><div class='row bg-gray-200'><div class='col-sm-12 col-md-2'>"
+            +an.answer.indicator
+			+"</div><div class='col-sm-12 col-md-10'>";
+		
+		if(an.ansComment.tag != null) answerForm += "["+an.ansComment.tag+"] ";
+		if(an.ansComment.comment != null) answerForm += an.ansComment.comment;
+		
+		answerForm += "</div></div></div></div>";
+			
+		for(let i=0; i<data.length; i++){
+			if(data[i].name == an.answer.indicator) data[i].value += 1;
+		}
+		
+		$ans.prepend(answerForm);
+		
+		$pie.html("");
+		createPie('#pie', data);
+	}
 	
 	function callAnswerList(qno){
 		$.ajax({
@@ -165,8 +206,6 @@ $(document).ready(function() {
 			type:"GET",
 			dataType:"json",
 			success: function (result) {
-				var answerForm = "";
-				
 				data = [{name:0, value:0, color: '#B40404'},
 					{name:25, value:0, color: '#FF0000'},
 					{name:50, value:0, color: '#FF8000'},
@@ -177,37 +216,13 @@ $(document).ready(function() {
 				for(let i=0; i<result.length; i++){
 					let an = result[i];
 					
-					answerForm +=
-						"<div class='row'><div class='col-sm-12 col-md-2 text-center'><img src='/resources/img/usericon.png' style='width: 50%'><p >"
-						+an.answer.username
-						+"</p></div><div class='col-sm-12 col-md-10'><div class='row bg-gray-200'><div class='col-sm-12 col-md-2'>"
-		                +an.answer.indicator
-						+"</div><div class='col-sm-12 col-md-10'>";
-						
-					if(an.ansComment.comment != null) answerForm += an.ansComment.comment;
-					
-					answerForm += "</div></div></div></div>";
-						
-					for(let i=0; i<data.length; i++){
-						if(data[i].name == an.answer.indicator) data[i].value += 1;
-					}
-						
+					addAnswer(an);
 				}
 				
 				console.log(data);
-				
-				$pie.html("");
-				createPie('#pie', data);
-				
-				$ans.html(answerForm);
-				
 			}
 		});
 	};
-	var $qContent = $('#qContent');
-	var $qContent2 = $('#qContent2');
-	var $qRegDate = $('#qRegDate');
-	var $qCategory = $('#qCategory');
 	function callQuestion(qno){
 		$.ajax({
 			url:"/feedback/question/"+qno,
@@ -223,11 +238,20 @@ $(document).ready(function() {
 		});
 	};
 	
+	function setPopupDiv(qno){
+		$ans.html("");
+		
+		callAnswerList(qno);
+		callQuestion(qno);
+		
+		$pop.show();
+	}
+	
 	// 페이지 이동
 	$("#paginate").on("click", "ul li a", function(e) {
 		e.preventDefault();
 	
-		var addr = "board?no="+${pageDTO.source.no}+"&page="+$(this).attr("href");
+		var addr = ${pageDTO.source.no}+"?page="+$(this).attr("href");
 		
 		<c:if test="${pageDTO.source.amount != null}">addr += "&amount="+${pageDTO.source.amount};</c:if>
 		<c:if test="${pageDTO.source.category != null}">addr += "&category="+${pageDTO.source.category};</c:if>
@@ -240,16 +264,11 @@ $(document).ready(function() {
 	
 	// 팝업
 	$("#listBody").on("click", "tr td a", function (e) {
-		
 		e.preventDefault();
 		
 		var qno = $(this).attr("href");
 		
-		callAnswerList(qno);
-		
-		callQuestion(qno);
-		
-		$pop.show();
+		setPopupDiv(qno);
 	});
 	
 	//팝업 닫음
@@ -259,7 +278,38 @@ $(document).ready(function() {
 		
 		$pop.hide();
 	});
+	
+	//피드백 요청
+	$("#questionBtn").on("click", function (e) {
+		
+		e.preventDefault();
+		var yesOrNo = $("input[name='yesOrNo']", "#questionForm").prop('checked');
+		var category = $("select[name='category']", "#questionForm").val();
+		var content = $("input[name='content']", "#questionForm").val();
+		
+		var questionVO = {cno:${pageDTO.source.no}, category, content, yesOrNo};
+		
+		console.log(questionVO);
+		
+		addQuestion(questionVO);
+	})
+	
+	socket.on("answer", function(answer){
+		addAnswer(answer);
+	});
+	
+	socket.emit("setClass", "${pageDTO.source.no}");
+	
+	socket.on("question", function (msg) {
+		setPopupDiv(msg);
+	});
+	
+	socket.on("requestAnswer", function (msg) {
+		console.log(msg);
+	});
 });
+
+
 
 </script>
 
