@@ -5,18 +5,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 /**
- * MainController
+ * SampleController
  */
 @Controller
-@RequestMapping("/tnm/*")
-public class MainController {
+@RequestMapping("/sample/*")
+public class SampleController {
 
-    @GetMapping("/main")
-    public void tnm(Model model){
-        System.out.println("\t TNM");
-        model.addAttribute("userName", "tester"+(char)('A'+(int)(Math.random()*21)));
+    @GetMapping("/ex")
+    public void ex(Model model){
+        model.addAttribute("msg", "we here");
     }
-
-    
 }

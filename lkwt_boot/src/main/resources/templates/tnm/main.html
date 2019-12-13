@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Teacher Notice Me</title>
+   
+    <!-- Custom fonts for this template -->
+    <link th:href=@{~/vendor/fontawesome-free/css/all.min.css} rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link th:href=@{~/css/sb-admin-2.min.css} rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link th:href=@{~/vendor/datatables/dataTables.bootstrap4.min.css} rel="stylesheet">
+
+</head>
+<body>
+    <h1 th:text="${userName}"></h1>
+    <th:block th:include=@{~/fragments/popup}></th:block>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script th:src=@{~/js/socket.io.js}></script>
+    
+    <script>
+        $(document).ready(function (){
+            var socket = io("10.10.10.132:3000");
+            //localhost:3000
+
+            var $answerForm = $("#answerForm");
+            var $ansContent = $("#ansContent");
+            var $ansUserName = $("input[name='userName']","#answerForm");
+            var $ansQno = $("input[name='qno']","#answerForm");
+            var $ansIndicator = $("input[name='indicator']","#answerForm");
+            var $ansTag = $("input[name='tag']","#answerForm");
+            var $ansComment = $("input[name='comment']","#answerForm");
+
+            var $ansStar = $("#ansStar").children();
+            var $ansYnN = $("#ansYnN").children();
+
+            var $ansPop = $("#ansPop");
+
+
+
+            function setAnsPop(data){
+                $ansQno.val(data.qno);
+                $ansContent.val(data.content);
+                
+                if(data.yesOrNo){
+                    $ansStar.hide();
+                    $ansYnN.show();
+                } else {
+                    $ansStar.show();
+                    $ansYnN.hide();
+                }
+            }
+
+            function changeStar(value){
+                $ansStar.each(function (idx, star){
+                    if(idx == 0) return;
+                    star.style.color = "#dddfeb";
+                    console.log(value);
+                    if(Number(star.getAttribute('data-value')) <= Number(value)) star.style.color = "#FE9A2E";
+                });
+
+                
+            }
+
+            // 0=No, 100=yes
+            function changeYnN(value){
+                var color = ["#FA5858", "#82FA58"];
+
+                $ansYnN.each(function (idx, item){
+                    item.style.color = "#dddfeb";
+
+                    if(Number(item.getAttribute( 'data-value' )) == Number(value)) item.style.color = color[idx];
+                });
+            }
+
+            $ansStar.hover(function (e){
+                changeStar(this.getAttribute( 'data-value' ));
+            });
+
+            $("#starZero").hover(function (e){
+                $("#starZero").css("color","#FA5858");
+            });
+
+            $("#starZero").mouseleave(function (){
+                $("#starZero").css("color","#dddfeb");
+            });
+
+            $ansStar.on("click", function (){
+                $ansIndicator.val(this.getAttribute('data-value'));
+            });
+
+            $("#ansStar").parent().mouseleave(function (){
+                changeStar($ansIndicator.val());
+                changeYnN($ansIndicator.val());
+            });
+
+            $("#ansPopDown").on("click", function (e){
+                e.preventDefault();
+
+                var data = 
+                    { qno:$ansQno.val()
+                    , userName:$ansUserName.val()
+                    , indicator:$ansIndicator.val()
+                    , tag:$ansTag.val()
+                    , comment:$ansComment.val()
+                };
+
+                $ansPop.hide();
+
+                socket.emit("answer", data);
+            });
+
+            socket.emit("setClass", 1);
+
+            socket.on("requestAnswer", function (data){
+                console.log(data);
+
+
+            });
+        });
+    </script>
+</body>
+</html>
