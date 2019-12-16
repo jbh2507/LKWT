@@ -24,10 +24,11 @@
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script th:src=@{~/js/socket.io.js}></script>
     
-    <script>
+    <script th:inline="javascript">
         $(document).ready(function (){
-            var socket = io("10.10.10.132:3000");
+            var socket = io("localhost:3000");
             //localhost:3000
+            //10.10.10.132:3000
 
             var $answerForm = $("#answerForm");
             var $ansContent = $("#ansContent");
@@ -46,7 +47,8 @@
 
             function setAnsPop(data){
                 $ansQno.val(data.qno);
-                $ansContent.val(data.content);
+                $ansContent.text(data.content);
+                $ansIndicator.val(0);
                 
                 if(data.yesOrNo){
                     $ansStar.hide();
@@ -59,7 +61,7 @@
 
             function changeStar(value){
                 $ansStar.each(function (idx, star){
-                    if(idx == 0) return;
+                    
                     star.style.color = "#dddfeb";
                     console.log(value);
                     if(Number(star.getAttribute('data-value')) <= Number(value)) star.style.color = "#FE9A2E";
@@ -83,13 +85,6 @@
                 changeStar(this.getAttribute( 'data-value' ));
             });
 
-            $("#starZero").hover(function (e){
-                $("#starZero").css("color","#FA5858");
-            });
-
-            $("#starZero").mouseleave(function (){
-                $("#starZero").css("color","#dddfeb");
-            });
 
             $ansStar.on("click", function (){
                 $ansIndicator.val(this.getAttribute('data-value'));
@@ -116,11 +111,15 @@
                 socket.emit("answer", data);
             });
 
-            socket.emit("setClass", 1);
+            socket.emit("setStudent", {cno:1, userName:[[ ${userName} ]] });
+
+            //socket.emit("setClass", 1);
 
             socket.on("requestAnswer", function (data){
                 console.log(data);
 
+                setAnsPop(data);
+                $ansPop.show();
 
             });
         });

@@ -4,6 +4,7 @@ const io = require('socket.io')(http);
 const req = require('request');
 const rm = require('./roomManager');
 
+// 10.10.10.132:8080/api
 const apiURI = "http://localhost:8080/api";
 
 http.listen(3000, function(){
@@ -16,9 +17,16 @@ io.on("connect", function (socket){
 
     console.log("socket("+id+") is connected");
 
-    socket.on("setClass", function(data){
-        console.log("setClass: "+data+"\t"+id)
+    socket.on("setStudent", function(data){
+        console.log("setStudent: "+data+"\t"+id)
         rm.joinRoom(data, socket);
+    });
+
+    socket.on("setTeacher", function(data){
+        console.log("setTeacher: "+data+"\t"+id)
+
+        rm.joinRoom(data, socket);
+        rm.setRoomMaster(data, socket);
     });
 
     // question 등록
@@ -48,23 +56,24 @@ io.on("connect", function (socket){
 
     // answer 등록
     socket.on("answer", function (data){
-        console.log(data + "\tresponse answer");
+        console.log("========= response answer");
+        console.log(data);
+        console.log("");
 
-        var answer = {qno:data.qno, username:data.userName, indicator:data.indicator};
+        var answer = {'qno':data.qno, 'username':data.userName, 'indicator':data.indicator , comment:data.comment, tag:data.tag};
 
         var ansComment = null;
         if(data.comment.length != 0 || data.tag.length != 0 ) ansComment = {comment:data.comment, tag:data.tag};
 
         var answerVO = {answer, ansComment};
 
-        var option = {url:apiURI+"/answer", form: answerVO};
+        var option = {url:apiURI+"/answer", form: answer};
 
         req.post(option);
 
         var roomMaster = rm.getRoomMaster(socket.curRoom);
 
-        roomMaster.emit("answer", answerVO);
-
+        io.to(roomMaster).emit("answer", answerVO);
     });
 
     socket.on("disconnect", function (socket){

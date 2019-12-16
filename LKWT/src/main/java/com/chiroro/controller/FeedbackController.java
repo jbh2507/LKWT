@@ -23,7 +23,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
-@RequestMapping("feedback/*")
+@RequestMapping("/feedback/*")
 @Log4j
 public class FeedbackController {
 	

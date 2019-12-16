@@ -6,13 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.chiroro.domain.AnsCommentVO;
 import com.chiroro.domain.AnswerAndAnsCommentVO;
+import com.chiroro.domain.AnswerVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.service.ApiService;
-import com.chiroro.service.FeedbackService;
 
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
@@ -27,7 +27,11 @@ public class ApiController {
 	private ApiService service;
 	
 	@PostMapping("/answer")
-	public ResponseEntity<Object> POSTAnswer(AnswerAndAnsCommentVO vo){
+	public ResponseEntity<Object> POSTAnswer(AnswerVO avo, AnsCommentVO cvo){
+		
+		AnswerAndAnsCommentVO vo = new AnswerAndAnsCommentVO();
+		vo.setAnswer(avo);
+		vo.setAnsComment(cvo);
 		
 		log.info(vo+"\t ApiController POSTAnswer");
 		

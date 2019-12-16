@@ -1,4 +1,4 @@
-<div id="ansPop" class="position-fixed" style="background-color: rgba(0, 0, 0, 0.5); top:0; left:0; width: 100vw; height: 100vh;">
+<div id="ansPop" class="position-fixed" style="background-color: rgba(0, 0, 0, 0.5); top:0; left:0; width: 100vw; height: 100vh; display: none;">
     <div class="card position-absolute" style="transform:translate(-50%, -50%); top:50%; left:50%;">
         <div style="width: 25rem;"> 
 
@@ -8,7 +8,7 @@
     
                 <div class="m-4">
                     <div id="ansStar" class="text-center">
-                            <i id="starZero" data-value="0" class="fas fa-ban fa-3x" style="color:#dddfeb;"></i>
+                            <i data-value="0" class="fas fa-star fa-3x" style="color:#FE9A2E;"></i>
                             <i data-value="25" class="fas fa-star fa-3x" style="color:#dddfeb;"></i>
                             <i data-value="50" class="fas fa-star fa-3x" style="color:#dddfeb;"></i>
                             <i data-value="75" class="fas fa-star fa-3x" style="color:#dddfeb;"></i>
@@ -22,7 +22,6 @@
                 </div>
     
                 <form id="answerForm">
-                    <input type="hidden" name="userName" value="${userName}">
                     <input type="hidden" name="qno" value="#">
                     <input type="hidden" name="indicator" value="0">
                     <div class="form-group row">

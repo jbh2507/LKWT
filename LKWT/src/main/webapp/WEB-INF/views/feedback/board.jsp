@@ -292,13 +292,13 @@ $(document).ready(function() {
 		console.log(questionVO);
 		
 		addQuestion(questionVO);
-	})
+	});
 	
 	socket.on("answer", function(answer){
 		addAnswer(answer);
 	});
 	
-	socket.emit("setClass", "${pageDTO.source.no}");
+	socket.emit("setTeacher", "${pageDTO.source.no}");
 	
 	socket.on("question", function (msg) {
 		setPopupDiv(msg);
