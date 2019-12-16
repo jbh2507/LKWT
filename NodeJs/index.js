@@ -18,8 +18,11 @@ io.on("connect", function (socket){
     console.log("socket("+id+") is connected");
 
     socket.on("setStudent", function(data){
-        console.log("setStudent: "+data+"\t"+id)
-        rm.joinRoom(data, socket);
+        console.log("setStudent: "+data.cno+data.userName+"\t"+id);
+
+        socket.userName = data.userName;
+
+        rm.joinRoom(data.cno, socket);
     });
 
     socket.on("setTeacher", function(data){
@@ -60,19 +63,21 @@ io.on("connect", function (socket){
         console.log(data);
         console.log("");
 
-        var answer = {'qno':data.qno, 'username':data.userName, 'indicator':data.indicator , comment:data.comment, tag:data.tag};
+        data.username = socket.userName;
+
+        var option = {url:apiURI+"/answer", form: data};
+        
+        req.post(option);
+
+        
+        var answer = {'qno':data.qno, 'username':data.userName, 'indicator':data.indicator};
 
         var ansComment = null;
         if(data.comment.length != 0 || data.tag.length != 0 ) ansComment = {comment:data.comment, tag:data.tag};
 
         var answerVO = {answer, ansComment};
 
-        var option = {url:apiURI+"/answer", form: answer};
-
-        req.post(option);
-
         var roomMaster = rm.getRoomMaster(socket.curRoom);
-
         io.to(roomMaster).emit("answer", answerVO);
     });
 

@@ -185,8 +185,8 @@ $(document).ready(function() {
             +an.answer.indicator
 			+"</div><div class='col-sm-12 col-md-10'>";
 		
-		if(an.ansComment.tag != null) answerForm += "["+an.ansComment.tag+"] ";
-		if(an.ansComment.comment != null) answerForm += an.ansComment.comment;
+		if(an.ansComment != null && an.ansComment.tag != null) answerForm += "["+an.ansComment.tag+"] ";
+		if(an.ansComment != null && an.ansComment.comment != null) answerForm += an.ansComment.comment;
 		
 		answerForm += "</div></div></div></div>";
 			
@@ -240,6 +240,7 @@ $(document).ready(function() {
 	
 	function setPopupDiv(qno){
 		$ans.html("");
+		$pie.html("");
 		
 		callAnswerList(qno);
 		callQuestion(qno);
