@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chiroro.mapper.FileMapper">
+	<insert id="insert">
+		INSERT INTO file(file_box_bno, fname, reg_date)
+		<if test='bno == null'>
+			VALUES(LAST_INSERT_ID(), #{fname}, now())		
+		</if>
+		<if test='bno != null'>
+			VALUES(#{bno}, #{fname}, now())		
+		</if>
+	</insert>
+	
+	<select id="selectOne" resultType="com.chiroro.domain.FileBoxVO">
+		SELECT fno, fname, reg_date regdate, file_box_bno bno
+		FROM file
+		WHERE fno = ${fno}
+	</select>
+	
+	<select id="selectList" resultMap="fileMap"> 
+		SELECT f.fno, f.file_box_bno bno, f.fname, f.reg_date regdate, count(a.lno) access
+		FROM file f
+		LEFT JOIN accesslog a ON f.fno = a.file_fno
+		WHERE f.file_box_bno = #{bno}
+		GROUP BY f.fno
+	</select>
+	
+	<resultMap type="com.chiroro.domain.FileListVO" id="fileMap">
+		<id column="fno" property="file.fno"/>
+		
+		<result column="access" property="accessCount"/>
+		
+		<association property="file" javaType="com.chiroro.domain.FileVO">
+			<id column="fno" property="fno"/>
+			<result column="fname" property="fname"/>
+			<result column="reg_date" property="regDate"/>
+			<result column="file_box_bno" property="bno"/>
+		</association>
+	</resultMap>
+
+
+	<delete id="delete">
+		DELETE FROM file
+		WHERE fno = #{fno}
+	</delete>
+	
+</mapper>

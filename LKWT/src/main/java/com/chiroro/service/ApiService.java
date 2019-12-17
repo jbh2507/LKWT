@@ -1,8 +1,5 @@
 package com.chiroro.service;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.chiroro.domain.AnswerAndAnsCommentVO;
 import com.chiroro.domain.QuestionVO;
 

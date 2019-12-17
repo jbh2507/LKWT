@@ -7,6 +7,7 @@ public class PagingSource {
 	private Integer page, amount;
 	private Long no;
 	private String category, keyword;
+	private String tag;
 	
 	public PagingSource() {
 		this.page = 1;
@@ -14,6 +15,7 @@ public class PagingSource {
 	}
 	
 	public String[] getCategorys() {
+		if(category == null) return null;
 		return category.split("");
 	}
 	

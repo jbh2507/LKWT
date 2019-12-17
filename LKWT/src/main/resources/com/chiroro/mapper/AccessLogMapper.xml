@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chiroro.mapper.AccessLogMapper">
+	
+	<select id="selectList" resultType="com.chiroro.domain.AccessLogListVO">
+		SELECT f.fname, a.username, a.access_date date
+		FROM file f
+		JOIN accesslog a ON f.fno = a.file_fno
+		WHERE f.file_box_bno = #{no}
+		ORDER BY f.fname
+		LIMIT #{limit}, #{amount}
+	</select>
+	
+	<select id="selectTotal" resultType="long">
+		SELECT count(lno)
+		FROM file f
+		JOIN accesslog a ON f.fno = a.file_fno
+		WHERE f.file_box_bno = #{no}
+	</select>
+	
+</mapper>

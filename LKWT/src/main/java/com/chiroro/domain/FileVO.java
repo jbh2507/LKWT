@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class FileVO {
 	
+	private Long fno;
 	private String fname;
 	private Long bno;
 	private Date regDate;

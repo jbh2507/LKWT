@@ -1,29 +1,33 @@
 package com.chiroro.service;
 
-import com.chiroro.domain.AccessLogVO;
-import com.chiroro.domain.ResourceRoomVO;
-import com.chiroro.domain.TaskListVO;
-import com.chiroro.domain.TaskVO;
+import com.chiroro.domain.AccessLogListVO;
+import com.chiroro.domain.FileBoxListVO;
+import com.chiroro.domain.FileBoxVO;
+import com.chiroro.domain.FileBoxViewVO;
+import com.chiroro.domain.FileVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
 
 public interface FileBoxService {
 	
 	//과제 등록
-	public void addTask(TaskVO vo);
+	public void addTask(FileBoxVO vo);
 	//과제 리스트
-	public PageDTO<TaskListVO> getTaskList(PagingSource source);
+	public PageDTO<FileBoxListVO> getTaskList(PagingSource source);
 	//과제 조회
-	public TaskVO getTask(long bno);
+	public FileBoxViewVO getTask(long bno);
 	
 	//자료 등록
-	public void addResourceRoom(ResourceRoomVO box);
+	public void addResourceRoom(FileBoxViewVO vo);
 	//자료 리스트
-	public PageDTO<ResourceRoomVO> getResourceRoomList(PagingSource source);
+	public PageDTO<FileBoxListVO> getResourceRoomList(PagingSource source);
 	//자료 조회
-	public ResourceRoomVO getResourceRoom(long bno);
+	public FileBoxViewVO getResourceRoom(long bno);
+	
+	//파일 등록
+	public void addFile(FileVO vo);
 	
 	//엑세스 로그 조회
-	public AccessLogVO getAccessLog(PagingSource source);
+	public PageDTO<AccessLogListVO> getAccessLog(PagingSource source);
 
 }

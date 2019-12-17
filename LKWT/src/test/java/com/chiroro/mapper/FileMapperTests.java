@@ -2,6 +2,7 @@ package com.chiroro.mapper;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
 import org.junit.Before;
@@ -11,38 +12,53 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.chiroro.domain.StudentVO;
+import com.chiroro.domain.FileListVO;
+import com.chiroro.domain.FileVO;
 
 import lombok.extern.log4j.Log4j;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:src/main/webapp/WEB-INF/spring/root-context.xml")
 @Log4j
-public class StudentMapperTests {
+public class FileMapperTests {
 	
 	@Autowired
-	private StudentMapper mapper;
+	private FileMapper mapper;
 	
-	private StudentVO vo;
+	private FileVO vo;
 	
 	@Before
 	public void ready() {
-		vo = new StudentVO();
-		vo.setCno(1L);
+		vo = new FileVO();
+		vo.setFname("testfile.txt");
 	}
 	
 	@Test
 	public void isExist() {
 		assertNotNull(mapper);
 	}
-	
+	 
 	@Test
 	public void insert() {
-		IntStream.range(0, 20).forEach(i -> {
-			vo.setUserName("tester"+(char)('A'+i%20));
-			
+		IntStream.range(0, 10).forEach(i->{
+			vo.setBno(50L);
+
 			mapper.insert(vo);
-			log.info(vo+"\t inserted vo");
 		});
+	}
+	
+	@Test
+	public void selectOne() {
+		FileVO file = mapper.selectOne(1L);
+		
+		log.info(file+"\t selectOne result");
+	}
+	
+	@Test
+	public void selectList() {
+		List<FileListVO> list =mapper.selectList(50L);
+		
+		log.info("===============\tselectList result");
+		list.forEach(log::info);
 	}
 }

@@ -5,10 +5,7 @@ import java.sql.Date;
 import lombok.Data;
 
 @Data
-public class AccessLogVO {
-	
-	private Long fno, lno;
-	private String userName;
+public class AccessLogListVO {
+	private String fname, userName;
 	private Date date;
-	
 }

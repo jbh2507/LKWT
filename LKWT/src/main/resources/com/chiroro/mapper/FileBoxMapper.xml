@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.chiroro.mapper.FileBoxMapper">
+	<insert id="insert">
+		INSERT INTO filebox(cno, tag, title, content, reg_date)
+		VALUES(#{cno}, #{tag}, #{title}, #{content}, now())
+	</insert>
+	
+	<select id="selectOne" resultMap="fileboxViewMap">
+		SELECT bno, cno, content, b.reg_date regdate, tag, title
+		FROM filebox b
+		LEFT JOIN file f ON b.bno = f.file_box_bno
+		WHERE bno = ${bno}
+	</select>
+	
+	<resultMap type="com.chiroro.domain.FileBoxViewVO" id="fileboxViewMap">
+		<id column="bno" property="filebox.bno"/>
+		<association property="filebox" javaType="com.chiroro.domain.FileBoxVO" autoMapping="true">
+		</association>
+		
+		<collection property="files" javaType="com.chiroro.domain.FileVO">
+			<id column="fno" property="fno"/>
+			<result column="fname" property="fname"/>
+			<result column="reg_date" property="regDate"/>
+			<result column="file_box_bno" property="bno"/>
+		</collection>
+	</resultMap>
+	
+	<select id="selectList" resultMap="fileboxListMap">
+		SELECT b.bno, b.title, b.reg_date regdate, 
+			CAST((COUNT(fno) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate
+		FROM filebox b
+		LEFT JOIN file f ON b.bno = f.file_box_bno
+		WHERE cno = #{no}
+		AND tag = #{tag}
+		<include refid="where"/>
+		GROUP BY b.bno
+		ORDER BY b.bno DESC
+		LIMIT #{limit}, #{amount}
+	
+	</select>
+	
+	<sql id="where">
+		<if test="categorys != null and categorys.length != 0">
+			<foreach collection="categorys" open="AND (" separator="OR" close=")" item="item">
+				<if test='item == "T"'>
+					title LIKE concat("%", #{keyword}, "%")
+				</if>
+				
+				<if test='item == "D"'>
+					<![CDATA[ reg_date < STR_TO_DATA(#{keyword}, '%Y%m%d')]]>
+				</if>
+				
+				<if test='item == "W"'>
+					reg_date = STR_TO_DATA(#{keyword}, '%w')
+				</if>
+				
+			</foreach>
+		</if>
+	</sql>
+	
+	<resultMap type="com.chiroro.domain.FileBoxListVO" id="fileboxListMap">
+		<id column="bno" property="filebox.bno"/>
+		
+		<result column="rate" property="responseRate"/>
+		
+		<association property="filebox" javaType="com.chiroro.domain.FileBoxVO" autoMapping="true">
+		</association>
+	</resultMap>
+
+	<select id="selectTotal" resultType="long">
+		SELECT count(bno)
+		FROM filebox
+		WHERE cno = #{no}
+		AND tag = #{tag}
+		<include refid="where"/>
+	</select>
+
+	<delete id="delete">
+		DELETE FROM filebox
+		WHERE bno = #{bno}
+	</delete>
+	
+</mapper>

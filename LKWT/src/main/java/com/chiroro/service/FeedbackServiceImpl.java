@@ -18,7 +18,6 @@ import com.chiroro.mapper.AnsCommentMapper;
 import com.chiroro.mapper.AnswerMapper;
 import com.chiroro.mapper.QuestionMapper;
 
-import lombok.AllArgsConstructor;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 

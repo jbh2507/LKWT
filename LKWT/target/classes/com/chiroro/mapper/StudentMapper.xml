@@ -7,7 +7,7 @@
 
 <insert id="insert">
 	INSERT INTO student
-	VALUES(#{cno}, #{userName}, #{name})
+	VALUES(#{cno}, #{userName})
 </insert>
 
 </mapper>

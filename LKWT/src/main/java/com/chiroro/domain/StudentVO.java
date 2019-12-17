@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class StudentVO {
 	private Long cno;
-	private String userName, name;
+	private String userName;
 }
