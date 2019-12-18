@@ -51,11 +51,11 @@
 				</if>
 				
 				<if test='item == "D"'>
-					<![CDATA[ reg_date < STR_TO_DATA(#{keyword}, '%Y%m%d')]]>
+					<![CDATA[ b.reg_date > STR_TO_DATE(#{keyword}, '%Y-%m-%d')]]>
 				</if>
 				
 				<if test='item == "W"'>
-					reg_date = STR_TO_DATA(#{keyword}, '%w')
+					b.reg_date = STR_TO_DATE(#{keyword}, '%w')
 				</if>
 				
 			</foreach>
@@ -73,15 +73,29 @@
 
 	<select id="selectTotal" resultType="long">
 		SELECT count(bno)
-		FROM filebox
+		FROM filebox b
 		WHERE cno = #{no}
 		AND tag = #{tag}
 		<include refid="where"/>
 	</select>
+	
+	<update id="update">
+		UPDATE filebox
+		SET title = #{title},
+			content = #{content}
+		WHERE bno = #{bno}
+		AND tag = #{tag}
+	</update>
 
 	<delete id="delete">
 		DELETE FROM filebox
 		WHERE bno = #{bno}
 	</delete>
+	
+	<select id="isTag" resultType="String">
+		SELECT tag
+		FROM filebox
+		WHERE bno = #{bno}
+	</select>
 	
 </mapper>

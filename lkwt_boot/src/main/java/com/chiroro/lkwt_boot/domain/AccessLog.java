@@ -1,6 +1,6 @@
 package com.chiroro.lkwt_boot.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,5 +35,5 @@ public class AccessLog {
     private File file;
 
     @CreationTimestamp
-    private Date accessDate;
+    private LocalDateTime accessDate;
 }

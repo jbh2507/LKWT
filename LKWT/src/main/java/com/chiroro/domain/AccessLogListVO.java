@@ -1,11 +1,11 @@
 package com.chiroro.domain;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
 @Data
 public class AccessLogListVO {
 	private String fname, userName;
-	private Date date;
+	private LocalDateTime date;
 }

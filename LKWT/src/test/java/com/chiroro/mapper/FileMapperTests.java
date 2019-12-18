@@ -40,8 +40,8 @@ public class FileMapperTests {
 	 
 	@Test
 	public void insert() {
-		IntStream.range(0, 10).forEach(i->{
-			vo.setBno(50L);
+		IntStream.range(0, 3).forEach(i->{
+			vo.setBno(30L);
 
 			mapper.insert(vo);
 		});

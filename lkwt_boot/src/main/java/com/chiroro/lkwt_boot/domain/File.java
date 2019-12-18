@@ -36,8 +36,8 @@ public class File {
     @CreationTimestamp
     private Date regDate;
     
-        @ManyToOne
-        private FileBox fileBox;
+    @ManyToOne
+    private FileBox fileBox;
 
     @OneToMany(mappedBy = "file"
         ,cascade = {CascadeType.PERSIST, CascadeType.MERGE}

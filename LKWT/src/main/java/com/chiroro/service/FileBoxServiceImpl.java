@@ -1,6 +1,5 @@
 package com.chiroro.service;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import com.chiroro.domain.AccessLogListVO;
 import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
 import com.chiroro.domain.FileBoxViewVO;
+import com.chiroro.domain.FileListVO;
 import com.chiroro.domain.FileVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
@@ -19,10 +19,11 @@ import com.chiroro.mapper.FileBoxMapper;
 import com.chiroro.mapper.FileMapper;
 
 import lombok.Setter;
-import oracle.net.aso.e;
+import lombok.extern.log4j.Log4j;
 
 @Service
 @Transactional
+@Log4j
 public class FileBoxServiceImpl implements FileBoxService {
 	
 	@Setter(onMethod_ = @Autowired)
@@ -56,9 +57,17 @@ public class FileBoxServiceImpl implements FileBoxService {
 		
 		return fileboxMapper.selectOne(bno);
 	}
+	
+	@Override
+	public void updateTask(FileBoxVO vo) {
+		long bno = vo.getBno();
+		if(!(fileboxMapper.isTag(bno).equals("T"))) throw new IllegalArgumentException("bno: "+bno+" is not task's bno");
+		
+		fileboxMapper.update(vo);
+	}
 
 	@Override
-	public void addResourceRoom(FileBoxViewVO vo) {
+	public void addResource(FileBoxViewVO vo) {
 		FileBoxVO box = vo.getFilebox();
 		box.setTag('L');
 		List<FileVO> files = vo.getFiles();
@@ -70,7 +79,7 @@ public class FileBoxServiceImpl implements FileBoxService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public PageDTO<FileBoxListVO> getResourceRoomList(PagingSource source) {
+	public PageDTO<FileBoxListVO> getResourceList(PagingSource source) {
 		source.setTag("L");
 		
 		return new PageDTO<>(source, fileboxMapper);
@@ -78,23 +87,51 @@ public class FileBoxServiceImpl implements FileBoxService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public FileBoxViewVO getResourceRoom(long bno) {
+	public FileBoxViewVO getResource(long bno) {
 		FileBoxViewVO view = fileboxMapper.selectOne(bno);
-		if(view.getFilebox().getTag() != 'L') throw new IllegalArgumentException("bno: "+bno+" is not ResourceRoom's bno");
+		if(view.getFilebox().getTag() != 'L') throw new IllegalArgumentException("bno: "+bno+" is not Resource's bno");
 		
 		return fileboxMapper.selectOne(bno);
 	}
 
 	@Override
+	public void updateResource(FileBoxViewVO vo) {
+		FileBoxVO box = vo.getFilebox();
+		long bno = box.getBno();
+		
+		if(!(fileboxMapper.isTag(bno).equals("L"))) throw new IllegalArgumentException("bno: "+bno+" is not ResourceRoom's bno");
+		
+		// 기존 파일 목록들 비움
+		fileMapper.selectList(bno).forEach(e -> {
+			long fno = e.getFile().getFno();
+			fileMapper.delete(fno);
+		});;
+		
+		
+		fileboxMapper.update(box);
+		
+		// 새로 들어온 파일 목록 insert
+		vo.getFiles().forEach(e -> {
+			fileMapper.insert(e);
+		});
+		
+	}
+	
+	@Override
 	public void addFile(FileVO vo) {
 		fileMapper.insert(vo);
 	}
-
+	
 	@Override
 	@Transactional(readOnly = true)
 	public PageDTO<AccessLogListVO> getAccessLog(PagingSource source) {
 
 		return new PageDTO<>(source, logMapper);
+	}
+	
+	@Override
+	public void delete(long bno) {
+		fileboxMapper.delete(bno);
 	}
 
 }

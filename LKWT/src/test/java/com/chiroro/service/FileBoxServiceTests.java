@@ -3,6 +3,7 @@ package com.chiroro.service;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,18 +108,36 @@ public class FileBoxServiceTests {
 		
 		boxView.setFiles(list);
 		
-		service.addResourceRoom(boxView);
-		
+		service.addResource(boxView);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
 	public void getRRTest() {
-		service.getResourceRoom(1L);
+		service.getResource(1L);
+	}
+	
+	@Test
+	public void updateResource() {
+		long bno =2L;
+		box.setBno(bno);
+		box.setTag('L');
+		box.setTitle("updateTest");
+		
+		file.setFname("File"+LocalTime.now()+".txt");
+		file.setBno(bno);
+		
+		List<FileVO> files = new ArrayList<>();
+		files.add(file);
+		
+		boxView.setFiles(files);
+		boxView.setFilebox(box);
+		
+		service.updateResource(boxView);
 	}
 	
 	@Test
 	public void getLogTest() {
-		source.setNo(50L);
+		source.setNo(30L);
 		PageDTO<AccessLogListVO> dto = service.getAccessLog(source);
 		
 		log.info("===============\tgetLogList result");

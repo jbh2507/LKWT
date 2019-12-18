@@ -35,9 +35,9 @@
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="buttons.html">Feedback</a>
-            <a class="collapse-item" href="cards.html">Task</a>
-            <a class="collapse-item" href="cards.html">Lib</a>
+            <a class="collapse-item" href="/feedback/board/1">Feedback</a>
+            <a class="collapse-item" href="/task/board/1">Task</a>
+            <a class="collapse-item" href="/resource/board/1">Lib</a>
           </div>
         </div>
       </li>

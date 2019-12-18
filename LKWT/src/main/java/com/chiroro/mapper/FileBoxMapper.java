@@ -11,7 +11,9 @@ public interface FileBoxMapper extends PagingMapper<FileBoxListVO> {
 	//r
 	public FileBoxViewVO selectOne(long bno);
 	//u
-	//public void update(FileBoxVO vo);
+	public void update(FileBoxVO vo);
 	//d
 	public void delete(long bno);
+	
+	public String isTag(long bno);
 }

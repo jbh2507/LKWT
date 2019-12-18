@@ -16,18 +16,26 @@ public interface FileBoxService {
 	public PageDTO<FileBoxListVO> getTaskList(PagingSource source);
 	//과제 조회
 	public FileBoxViewVO getTask(long bno);
+	//과제 업데이트
+	public void updateTask(FileBoxVO vo);
 	
 	//자료 등록
-	public void addResourceRoom(FileBoxViewVO vo);
+	public void addResource(FileBoxViewVO vo);
 	//자료 리스트
-	public PageDTO<FileBoxListVO> getResourceRoomList(PagingSource source);
+	public PageDTO<FileBoxListVO> getResourceList(PagingSource source);
 	//자료 조회
-	public FileBoxViewVO getResourceRoom(long bno);
+	public FileBoxViewVO getResource(long bno);
+	//자료 업데이트
+	public void updateResource(FileBoxViewVO vo);
+	
+	void delete(long bno);
+	
 	
 	//파일 등록
 	public void addFile(FileVO vo);
 	
 	//엑세스 로그 조회
 	public PageDTO<AccessLogListVO> getAccessLog(PagingSource source);
+	
 
 }
