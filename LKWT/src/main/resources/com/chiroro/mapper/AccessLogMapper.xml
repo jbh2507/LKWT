@@ -6,11 +6,11 @@
 <mapper namespace="com.chiroro.mapper.AccessLogMapper">
 	
 	<select id="selectList" resultType="com.chiroro.domain.AccessLogListVO">
-		SELECT f.fname, a.username, a.access_date date
+		SELECT SUBSTRING(f.fname, LOCATE('_', f.fname)+1) fname, a.username, a.access_date date
 		FROM file f
 		JOIN accesslog a ON f.fno = a.file_fno
 		WHERE f.file_box_bno = #{no}
-		ORDER BY f.fname
+		ORDER BY date
 		LIMIT #{limit}, #{amount}
 	</select>
 	

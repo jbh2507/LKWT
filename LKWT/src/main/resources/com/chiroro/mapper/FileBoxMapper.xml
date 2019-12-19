@@ -10,7 +10,7 @@
 	</insert>
 	
 	<select id="selectOne" resultMap="fileboxViewMap">
-		SELECT bno, cno, content, b.reg_date regdate, tag, title
+		SELECT b.bno, cno, content, b.reg_date regdate, tag, title, f.fno, f.fname, f.reg_date, SUBSTRING(f.fname, LOCATE('_', f.fname)+1) orginname
 		FROM filebox b
 		LEFT JOIN file f ON b.bno = f.file_box_bno
 		WHERE bno = ${bno}
@@ -21,12 +21,16 @@
 		<association property="filebox" javaType="com.chiroro.domain.FileBoxVO" autoMapping="true">
 		</association>
 		
-		<collection property="files" javaType="com.chiroro.domain.FileVO">
-			<id column="fno" property="fno"/>
-			<result column="fname" property="fname"/>
-			<result column="reg_date" property="regDate"/>
-			<result column="file_box_bno" property="bno"/>
+		<collection property="files" resultMap="filesMap">
 		</collection>
+	</resultMap>
+	
+	<resultMap type="com.chiroro.domain.FileVO" id="filesMap">
+		<id column="fno" property="fno"/>
+		<result column="fname" property="fname"/>
+		<result column="orginname" property="orginName"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="file_box_bno" property="bno"/>
 	</resultMap>
 	
 	<select id="selectList" resultMap="fileboxListMap">

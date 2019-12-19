@@ -54,20 +54,25 @@
             <div class="card-body">
      
               <div style="margin: 10px">
-              <form class="row" method="get">
-             	  <div class="col-sm-12 col-md-2">
-	              <select name="category" class="custom-select custom-select-sm form-control form-control-sm">
-	                <option value="T">제목</option>
-	                <option value="W">요일</option>
-	              </select>
-	              </div>
-	              <div class="col-sm-12 col-md-3">
-                  <input type="text" name="keyword" class="form-control form-control-sm" placeholder="내용을 입력해주세요">
-                  </div>
-                  <div class="col-sm-12 col-md-3">
-                  <button id="fileboxBtn">검색</button>
-                  </div>
-                  </form>
+            	  <div class="d-flex flex-row align-item-center justify-content-between">
+	              	<form class="row" style="width: 50%" method="get">
+	             	  <div class="col-sm-12 col-md-2">
+		              <select name="category" class="custom-select custom-select-sm form-control form-control-sm">
+		                <option value="T">제목</option>
+		                <option value="W">요일</option>
+		              </select>
+		              </div>
+		              <div class="col-sm-12 col-md-8">
+	                  	<input type="text" name="keyword" class="form-control form-control-sm" placeholder="제목을 입력해주세요">
+	                  </div>
+	                  <div class="col-auto">
+	                  	<button id="searchBtn">검색</button>
+	                  </div>
+	                </form>
+	                <div>
+	                  <a id="registBtn" href="#" class="btn btn-primary">작성</a>
+	                </div>
+                 </div>
               </div>
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -76,7 +81,7 @@
                       <th style="width: 5%">번호</th>
                       <th>제목</th>
                       <th style="width: 10%">날짜</th>
-                      <th style="width: 5%">제출</th>
+                      <th style="width: 10%">제출율</th>
                     </tr>
                   </thead>
                   <tbody id="listBody">
@@ -85,7 +90,11 @@
 	                      <td>${post.filebox.bno}</td>
 	                      <td><a href="${post.filebox.bno}"><c:out value="${post.filebox.title}"/></a></td>
 	                      <td>${post.filebox.regDate.toString()}</td>
-	                      <td>${post.responseRate}</td>
+	                      <td>
+	                      	<div class="progress m-0">
+                    			<div class="progress-bar" role="progressbar" style="width: ${post.responseRate}%" aria-valuenow="${post.responseRate}" aria-valuemin="0" aria-valuemax="100"></div>
+                 		  	</div>
+	                     </td>
 	                    </tr>
 	                  </c:forEach>
                   
@@ -131,7 +140,8 @@
   	<%@include file="../includes/footer.jsp"%>
   	
   	<%@include file="./task.jsp"%>
-  
+  	<%@include file="./register.jsp"%>
+  	<%@include file="./modify.jsp"%>
 	
     </div>
     <!-- End of Content Wrapper -->
@@ -141,32 +151,56 @@
 
 <script>
 $(document).ready(function() {
+	var cno = ${pageDTO.source.no};
+	var tag = 'T';
+	var curBno = null;
+	
 	var $keyword = $("input[name='keyword']");
 	var $pop = $("#pop");
+	var $regPop = $("#regPop");
+	var $modyPop = $("#modyPop");
 	
-	function callfilebox(qno){
+	var $post = $(".post");
+	var $postTitle = $("#postTitle");
+	var $postContent = $("#postContent");
+	var $files = $("#files");
+	var $nonSubmitter = $("#nonSubmitter");
+	
+	var $modyTitle = $("input[name='title']", "#modyForm");
+	var $modyContent = $("textarea[name='content']", "#modyForm");
+	
+	
+	function callfilebox(bno){
 		$.ajax({
-			url:"/feedback/filebox/"+qno,
+			url:"/task/"+bno,
 			type:"GET",
 			dataType:"json",
 			success: function (result) {
-				 $qContent.text(result.content);
-				 $qContent2.text(result.content);
-				 $qCategory.text("["+result.category+"]");
-				 $qRegDate.text(new Date(result.regDate).toLocaleDateString());
 				console.log(result);
+				console.log(result.filebox);
+				
+				var filebox = result.filebox;
+				var files = result.files;
+				curBno = filebox.bno;
+				
+				$postTitle.text(filebox.title);
+				$modyTitle.val(filebox.title);
+				$postContent.text(filebox.content);
+				$modyContent.val(filebox.content);
+				
+				var filesContent = "";
+				for(let i=0; i<files.length; i++){
+					filesContent += "<div><a href='/download/?down="+files[i].regDate+"_"+files[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+files[i].fname+"</div>"
+				}
+				$files.html(filesContent);
 			}
 		});
 	};
 	
-	function setPopupDiv(qno){
-		$ans.html("");
-		$pie.html("");
+	function setPopupDiv(bno){
+		$post.html("");
 		
-		callAnswerList(qno);
-		callfilebox(qno);
-		
-		$pop.show();
+		callfilebox(bno);		
 	}
 	
 	// 페이지 이동
@@ -188,9 +222,12 @@ $(document).ready(function() {
 	$("#listBody").on("click", "tr td a", function (e) {
 		e.preventDefault();
 		
-		var qno = $(this).attr("href");
+		var bno = $(this).attr("href");
+		console.log(this);
+		console.log(bno);
+		setPopupDiv(bno);
 		
-		setPopupDiv(qno);
+		$pop.show();
 	});
 	
 	//팝업 닫음
@@ -201,10 +238,84 @@ $(document).ready(function() {
 		$pop.hide();
 	});
 	
+	// 등록 팝업 열기
+	$("#registBtn").on("click", function (e) {
+	
+		e.preventDefault();
+		
+		$regPop.show();
+	});
+	
+	// 등록 팝업 닫음
+	$("#regPopDown").on("click", function (e) {
+	
+		e.preventDefault();
+		
+		$regPop.hide();
+	});
+	
+	// 수정 팝업 열기
+	$("#modyPopUp").on("click", function (e) {
+	
+		e.preventDefault();
+		
+		$modyPop.show();
+	});
+	
+	// 수정 팝업 닫음
+	$("#modyPopDown").on("click", function (e) {
+	
+		e.preventDefault();
+		
+		$modyPop.hide();
+	});
+	
 	// 검색 카테고리 전환시 placeholder 변경
 	$("select[name='category']").on("change", function () {
 		if(this.value === 'T') $keyword.attr("placeholder", "제목을 입력해주세요");
 		if(this.value === 'W') $keyword.attr("placeholder", "1~7");
+	});
+	
+	// 과제 등록
+	$("#regBtn").on("click", function () {
+		var formData = new FormData($("#regForm").get(0));
+		formData.append("cno", cno);
+		
+		console.log(formData);
+		
+		$.ajax({
+			url:"/task",
+			type:"POST",
+			data: formData,
+			enctype: 'multipart/form-data',
+			processData: false,
+	        contentType: false,
+		});
+		
+		$regPop.hide();
+	});
+	
+	// 과제 수정
+	$("#modyBtn").on("click", function () {
+		var formData = new FormData($("#modyForm").get(0));
+		formData.append("tag", tag);
+		formData.append("bno", curBno);
+		
+		console.log(formData);
+		
+		$.ajax({
+			url:"/task",
+			type:"PUT",
+			data: formData,
+			enctype: 'multipart/form-data',
+			processData: false,
+	        contentType: false,
+	        success: function (result) {
+	        	callfilebox(curBno)
+			}
+		});
+		
+		$modyPop.hide();
 	});
 
 });

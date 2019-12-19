@@ -25,7 +25,7 @@ import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 
 @Controller
-@RequestMapping("/task/*")
+@RequestMapping("/task")
 @Log4j
 public class TaskBoardController {
 	
@@ -48,12 +48,12 @@ public class TaskBoardController {
 	
 	@GetMapping("/{bno}")
 	@ResponseBody
-	public ResponseEntity<FileBoxViewVO> GETtask(long bno) {
+	public ResponseEntity<FileBoxViewVO> GETtask(@PathVariable long bno) {
 		FileBoxViewVO result = boxService.getTask(bno);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
-	@PostMapping()
+	@PostMapping("")
 	@ResponseBody
 	public ResponseEntity<Object> POSTtask(FileBoxVO vo) {
 		boxService.addTask(vo);

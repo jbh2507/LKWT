@@ -10,25 +10,49 @@
         </div>
 
         <!-- BODY -->
-        <div class="card-body m-0" style="height: 50vh; overflow: hidden;">
+        <div class="card-body m-0" style="height: 70vh; overflow: hidden;">
 	        <div style="height: 100%">
-		        <div style="height: 50%">
+		        <div style="height: 30%">
 		            <div class="row" style="height: 90%">
 		            
-		                <div id="postContent" class="col-sm-12 col-md-8 post" style="height: 100%; overflow: auto;">
+		                <div id="postContent" class="col-sm-12 col-md-7 post" style="height: 100%; overflow: auto;">
 		                
 		                </div>
 		                
-		                <div id="nonSubmitter" class="col-sm-12 col-md-4 row post" style="height: 100%; overflow: auto;">
-			            
+		                <div id="files" class="col-sm-12 col-md-5" style="height: 100%; overflow: auto;">
+		                	
 		                </div>
 		                
 	            	</div>
 		            <hr>
 	            </div>
-	            <div id="files" class="post" style="height: 30%">
-	            
-	            </div>
+	            	<div style="height: 50%; ">
+	            	<h6>AccessLog</h6>
+	            	<div id="accesslog" class="post" style="height: 75%; overflow: auto;"></div>
+	                <div style="height: 25%;">
+	                
+						<div class="dataTables_paginate paging_simple_numbers" id="logPaginate">
+						
+							<ul class="pagination" style="justify-content: flex-end;">									
+								<li class="paginate_button page-item previous">
+									<a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+								</li>
+								  
+								
+									<li class="paginate_button page-item">
+										<div class="page-link curPage">#</div>
+									</li>
+							
+								
+								<li class="paginate_button page-item next">
+									<a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">Next</a>
+								</li>
+							</ul>
+							
+						</div>
+					</div>
+						
+	               </div>
 	            <div class="h-auto">
 	            	<hr>
 		            <button id="modyPopUp" class="btn btn-warning btn-icon-split">
