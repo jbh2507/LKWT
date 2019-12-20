@@ -107,10 +107,14 @@ public class FileController {
 	
 	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	@ResponseBody
-	public ResponseEntity<byte[]> fileDownload(String down) {
-		log.info("download: "+down);
+	public ResponseEntity<byte[]> fileDownload(String data) {
+		log.info("download: "+data);
 		
-		int idx = down.indexOf('_');
+		int idx = data.indexOf('_');
+		long fno = Long.parseLong(data.substring(0, idx));
+		String down = data.substring(idx+1);
+		
+		idx = down.indexOf('_');
 		FileVO vo = new FileVO();
 		vo.setFname(down.substring(idx+1));
 		vo.setRegDate(new Date(Long.parseLong(down.substring(0, idx))));

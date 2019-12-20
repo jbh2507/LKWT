@@ -2,14 +2,24 @@ package com.chiroro.lkwt_boot.repository;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import javax.transaction.Transactional;
+
 import com.chiroro.lkwt_boot.domain.FileBox;
+import com.chiroro.lkwt_boot.dto.SearchDTO;
+import com.chiroro.lkwt_boot.predicater.FileBoxPredicate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 /**
  * FileBoxRepository
@@ -33,40 +43,32 @@ public class FileBoxRepositoryTests {
         assertNotNull(repo);
     }
 
+   
     @Test
-    public void createTest(){
-        for(int i=0; i<91; i++){
-            fb = new FileBox();
-            fb.setCno(1L);
-            fb.setContent("test"+System.currentTimeMillis());
-            fb.setTitle("test box "+i);
-            fb.setTag('L');
-
-            repo.save(fb);
-        }
-    }
-
-    @Test
-    public void readTest(){
-        
-    }
-
-    @Test
+    @Transactional
     public void readListTest(){
+        String title = null;
+        String content = null;
+        Integer weekOfDay = null;
+
+        int page = 0;
+        int size = 10;
         
-    }
 
-    @Test
-    public void updateTest(){
+
+        Pageable pageable = PageRequest.of(page, size, Direction.DESC, "bno");
         
+
+        SearchDTO dto = new SearchDTO();
+        dto.setNo(1L);
+        dto.setTag('T');
+
+        Page<FileBox> boxPage = repo.findAll(FileBoxPredicate.search(dto), pageable);
+        boxPage.forEach(e -> {
+            log.info(e.toString());
+        });
+
+    
     }
-
-    @Test
-    public void deleteTest(){
-        
-    }
-
-
-
     
 }

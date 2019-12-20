@@ -39,11 +39,15 @@ public class ResourceController {
 
 	@GetMapping("/board/{cno}")
 	public String GETBoard(PagingSource source, @PathVariable long cno, Model model) {
+		
+		String userName = "tester";
+		
 		source.setNo(cno);
 		
 		PageDTO<FileBoxListVO> pageDTO = boxService.getResourceList(source);
 		
 		model.addAttribute("pageDTO", pageDTO);
+		model.addAttribute("userName", userName);
 		
 		return "resource/board";
 	}

@@ -5,8 +5,8 @@
 
 <mapper namespace="com.chiroro.mapper.FileBoxMapper">
 	<insert id="insert">
-		INSERT INTO filebox(cno, tag, title, content, reg_date)
-		VALUES(#{cno}, #{tag}, #{title}, #{content}, now())
+		INSERT INTO filebox(cno, tag, title, content, reg_date, day_of_week)
+		VALUES(#{cno}, #{tag}, #{title}, #{content}, now(), DAYOFWEEK(now()))
 	</insert>
 	
 	<select id="selectOne" resultMap="fileboxViewMap">
@@ -59,7 +59,7 @@
 				</if>
 				
 				<if test='item == "W"'>
-					b.reg_date = STR_TO_DATE(#{keyword}, '%w')
+					b.day_of_week = CAST(#{keyword} AS signed integer)
 				</if>
 				
 			</foreach>

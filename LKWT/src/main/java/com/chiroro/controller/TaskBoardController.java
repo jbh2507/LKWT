@@ -38,10 +38,13 @@ public class TaskBoardController {
 	@GetMapping("/board/{cno}")
 	public String GETBoard(PagingSource source, @PathVariable long cno, Model model) {
 		source.setNo(cno);
+		String userName = "tester";
 		
 		PageDTO<FileBoxListVO> pageDTO = boxService.getTaskList(source);
 		
 		model.addAttribute("pageDTO", pageDTO);
+		
+		model.addAttribute("userName", userName);
 		
 		return "task/board";
 	}

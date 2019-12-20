@@ -21,4 +21,8 @@
 		WHERE f.file_box_bno = #{no}
 	</select>
 	
+	<insert id="insert">
+		INSERT INTO accesslog(file_fno, username, access_date)
+		VALUES(#{fno},#{userName}, now())
+	</insert>
 </mapper>

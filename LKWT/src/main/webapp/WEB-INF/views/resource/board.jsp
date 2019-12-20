@@ -172,10 +172,16 @@ $(document).ready(function() {
 	
 	function viewFile(data, $target) {
 		
+		console.log(data);
+		
 		var filesContent = "";
 		for(let i=0; i<data.length; i++){
-			filesContent += "<div><a href='/download/?down="+data[i].regDate+"_"+data[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+data[i].orginName+"</div>"
-			filesContent +="<input name='fnames' type='hidden' value='"+data[i].regDate+"_"+data[i].fname+"'>"
+			if(!data[i].fno) {
+				filesContent += "<div><i class='far fa-check-circle mr-1'></i>"+data[i].orginName+"</div>";
+				filesContent +="<input name='fnames' type='hidden' value='"+data[i].regDate+"_"+data[i].fname+"'>"
+			}
+			else filesContent += "<div><a href='/download/?data="+data[i].fno+"_"+data[i].regDate+"_"+data[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+data[i].orginName+"</div>";
+			
 		}
 		
 		$target.html(filesContent);
@@ -187,8 +193,6 @@ $(document).ready(function() {
 			type:"GET",
 			dataType:"json",
 			success: function (result) {
-				console.log(result);
-				console.log(result.filebox);
 				
 				var filebox = result.filebox;
 				var files = result.files;
@@ -200,6 +204,10 @@ $(document).ready(function() {
 				$modyContent.val(filebox.content);
 				
 				viewFile(files, $files);
+				
+				for(let i=0; i<files.length; i++){
+					files[i].fno = null;
+				}
 				viewFile(files, $modyFileView);
 				
 				callAccessLog(1);
@@ -218,17 +226,18 @@ $(document).ready(function() {
 				var next = page != result.lastPage;
 				var prev = page != 1;
 				
-				console.log(list);
+				if(next) $logNextPage.removeClass('disabled');
+				else $logNextPage.addClass('disabled');
 				
-				$logNextPage.attr( 'disabled', next ? true : false );
+				if(prev) $logPrevPage.removeClass('disabled');
+				else $logPrevPage.addClass('disabled');
+				
 				$logNextPage.attr( 'href', page+1 );
-				$logPrevPage.attr( 'disabled', prev ? true : false );
 				$logPrevPage.attr( 'href', page-1 );
 				$logCurPage.text(page);
 				
 				var tmp = "";
 				for(let i=0; i<list.length; i++){
-					console.log(list[i].date)
 					var date = list[i].date;
 					tmp += "<div class='row' style='width: 90%'> <div class='col-sm-12 col-md-4'>"+date.year+"/"+date.monthValue+"/"+date.dayOfMonth+" "+date.hour+":"+date.minute+"</div> <div class='col-sm-12 col-md-5'>"+list[i].fname+"</div> <div class='col-sm-12 col-md-3'>"+list[i].userName+"</div> </div>"
 				}				
@@ -255,8 +264,6 @@ $(document).ready(function() {
 		<c:if test="${pageDTO.source.category != null}">addr += "&category="+"${pageDTO.source.category}";</c:if>
 		<c:if test="${pageDTO.source.keyword != null}">addr += "&keyword="+"${pageDTO.source.keyword}";</c:if>
 		
-		console.log(addr);
-		
 		location.href = addr;
 	});
 	
@@ -265,8 +272,6 @@ $(document).ready(function() {
 		e.preventDefault();
 		
 		var bno = $(this).attr("href");
-		console.log(this);
-		console.log(bno);
 		setPopupDiv(bno);
 		
 		$pop.show();
@@ -335,7 +340,6 @@ $(document).ready(function() {
 			data : formData,
 			type : 'POST',
 			success : function(result) {
-				console.log(result);
 				
 				viewFile(result, $modyFileView);
 			} // fnc
@@ -360,7 +364,6 @@ $(document).ready(function() {
 			data : formData,
 			type : 'POST',
 			success : function(result) {
-				console.log(result);
 				for(let i = 0; i < result.length; i++){
 					let json = result[i]
 					viewFile(result, $regFileView);
@@ -373,8 +376,6 @@ $(document).ready(function() {
 	$("#regBtn").on("click", function () {
 		var formData = new FormData($("#regForm").get(0));
 		formData.append("cno", cno);
-		
-		console.log(formData);
 		
 		$.ajax({
 			url:"/resource",
@@ -394,8 +395,6 @@ $(document).ready(function() {
 		formData.append("tag", tag);
 		formData.append("bno", curBno);
 		
-		console.log(formData);
-		
 		$.ajax({
 			url:"/resource",
 			type:"PUT",
@@ -414,13 +413,21 @@ $(document).ready(function() {
 	$logNextPage.on("click", function (e) {
 		e.preventDefault();
 		
-		callAccessLog($(this).attr("href"));
+		$this = $(this);
+		
+		if($this.hasClass('disabled')) return;
+		
+		callAccessLog($this.attr("href"));
 	});
 	
 	$logPrevPage.on("click", function (e) {
 		e.preventDefault();
 		
-		callAccessLog($(this).attr("href"));
+		$this = $(this);
+		
+		if($this.hasClass('disabled')) return;
+		
+		callAccessLog($this.attr("href"));
 	});
 
 });

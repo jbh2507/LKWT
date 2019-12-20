@@ -72,6 +72,8 @@ public class FileBoxMapperTests {
 	public void selectList(){
 		source.setTag("T");
 		source.setPage(1);
+		source.setCategory("W");
+		source.setKeyword("5");
 		
 		List<FileBoxListVO> list = mapper.selectList(source);
 		
