@@ -20,11 +20,12 @@
 <body>
     <th:block th:include=@{~/fragments/topbar}></th:block>
 
-    <h1>welcome</h1>
-    <h3 th:text="${userName}"></h3>
+    <th:block th:include=@{~/fragments/table}></th:block>
 
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <th:block th:include=@{~/fragments/ansFrag}></th:block>
     <script th:src=@{~/vendor/bootstrap/js/bootstrap.bundle.min.js}></script>
+
+
 </body>
 </html>

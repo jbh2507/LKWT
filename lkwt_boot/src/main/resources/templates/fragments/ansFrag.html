@@ -1,0 +1,104 @@
+<th:block th:include=@{~/fragments/ansPop}></th:block>
+
+<script th:src=@{~/js/socket.io.js}></script>
+
+<script th:inline="javascript">
+    $(document).ready(function (){
+        //var socket = io("10.10.10.132:3000");
+        //localhost:3000
+        //10.10.10.132:3000
+
+        var $answerForm = $("#answerForm");
+        var $ansContent = $("#ansContent");
+        var $ansUserName = $("input[name='userName']","#answerForm");
+        var $ansQno = $("input[name='qno']","#answerForm");
+        var $ansIndicator = $("input[name='indicator']","#answerForm");
+        var $ansTag = $("input[name='tag']","#answerForm");
+        var $ansComment = $("input[name='comment']","#answerForm");
+
+        var $ansStar = $("#ansStar").children();
+        var $ansYnN = $("#ansYnN").children();
+
+        var $ansPop = $("#ansPop");
+
+
+
+        function setAnsPop(data){
+            $ansQno.val(data.qno);
+            $ansContent.text(data.content);
+            $ansTag.val("");
+            $ansComment.val("");
+            $ansIndicator.val(0);
+            
+            if(data.yesOrNo){
+                $ansStar.hide();
+                $ansYnN.show();
+            } else {
+                $ansStar.show();
+                $ansYnN.hide();
+            }
+        }
+
+        function changeStar(value){
+            $ansStar.each(function (idx, star){
+                
+                star.style.color = "#dddfeb";
+                console.log(value);
+                if(Number(star.getAttribute('data-value')) <= Number(value)) star.style.color = "#FE9A2E";
+            });
+
+            
+        }
+
+        // 0=No, 100=yes
+        function changeYnN(value){
+            var color = ["#FA5858", "#82FA58"];
+
+            $ansYnN.each(function (idx, item){
+                item.style.color = "#dddfeb";
+
+                if(Number(item.getAttribute( 'data-value' )) == Number(value)) item.style.color = color[idx];
+            });
+        }
+
+        $ansStar.hover(function (e){
+            changeStar(this.getAttribute( 'data-value' ));
+        });
+
+
+        $ansStar.on("click", function (){
+            $ansIndicator.val(this.getAttribute('data-value'));
+        });
+
+        $("#ansStar").parent().mouseleave(function (){
+            changeStar($ansIndicator.val());
+            changeYnN($ansIndicator.val());
+        });
+
+        $("#ansPopDown").on("click", function (e){
+            e.preventDefault();
+
+            var data = 
+                { qno:$ansQno.val()
+                , userName:$ansUserName.val()
+                , indicator:$ansIndicator.val()
+                , tag:$ansTag.val()
+                , comment:$ansComment.val()
+            };
+
+            $ansPop.hide();
+
+            socket.emit("answer", data);
+        });
+
+        //socket.emit("setStudent", {cno:1, userName:[[ ${userName} ]] });
+
+        // socket.on("requestAnswer", function (data){
+        //     console.log(data);
+
+        //     setAnsPop(data);
+        //     $ansPop.show();
+
+        // });
+    });
+</script>

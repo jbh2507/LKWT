@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import groovy.transform.ToString;
@@ -37,11 +39,13 @@ public class File {
     private Date regDate;
     
     @ManyToOne
+    @JsonIgnore
     private FileBox fileBox;
 
     @OneToMany(mappedBy = "file"
         ,cascade = {CascadeType.PERSIST, CascadeType.MERGE}
         ,orphanRemoval = true
         ,fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<AccessLog> accesslog;
 }

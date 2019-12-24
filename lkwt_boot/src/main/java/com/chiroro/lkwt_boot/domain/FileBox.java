@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import groovy.transform.ToString;
@@ -49,6 +51,7 @@ public class FileBox {
         ,cascade = {CascadeType.PERSIST, CascadeType.MERGE}
         ,orphanRemoval = true
         ,fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<File> files;
 
     

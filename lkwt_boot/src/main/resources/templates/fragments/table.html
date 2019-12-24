@@ -1,0 +1,67 @@
+<div class="m-auto modal-xl" >
+  <div class="mb-3 mt-5">
+      <div class="d-flex flex-row align-item-center justify-content-between">
+          <form class="row" style="width: 50%" method="get">
+           <div class="col-sm-12 col-md-2">
+          <select name="category" class="custom-select custom-select-sm form-control form-control-sm">
+            <option value="T">제목</option>
+            <option value="W">요일</option>
+          </select>
+          </div>
+          <div class="col-sm-12 col-md-8">
+              <input type="text" name="keyword" class="form-control form-control-sm" placeholder="제목을 입력해주세요">
+          </div>
+          <div class="col-auto">
+              <button id="searchBtn">검색</button>
+          </div>
+        </form>
+        <div>
+          <a id="registBtn" href="#" class="btn btn-primary">작성</a>
+        </div>
+     </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+      <thead>
+        <tr>
+          <th style="width: 5em">번호</th>
+          <th>제목</th>
+          <th style="width: 8em">날짜</th>
+        </tr>
+      </thead>
+      <tbody id="listBody">
+          <!-- need loop -->
+            <tr th:each="post: ${pageDTO}">
+              <td th:text="${post.bno}"></td>
+              <td><a th:href="'/tnm/'+${post.tag}+'/'+${post.bno}" th:text="${post.title}"></a></td>
+              <td th:text="${post.regDate.toLocalDate()}"></td>
+            </tr>                     
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite" th:text="'Showing '+${pageDTO.number +1} +' of '+ ${pageDTO.totalPages}+' entries'"></div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+       <div class="dataTables_paginate paging_simple_numbers" id="paginate" th:with="start=${pageDTO.number-(pageDTO.number%10)+1}, end=${start + 9 > pageDTO.totalPages ? pageDTO.totalPages : start + 9}">
+        <ul class="pagination" style="justify-content: flex-end;">
+          <li class="paginate_button page-item previous" id="dataTable_previous" th:classappend="${star} ? 'disabled'">
+            <a th:href="'?page='+${start-1}" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a>
+          </li>
+          
+          <!-- need loop -->
+              <li class="paginate_button page-item " th:each="page: ${#numbers.sequence(start, end)}">
+                <a th:href="'?page='+${page}" aria-controls="dataTable" tabindex="0" class="page-link" th:text="${page}"></a>
+              </li>
+
+          <li class="paginate_button page-item next" id="dataTable_next" th:classappend="${pageDTO.last} ? 'disabled'">
+            <a th:href="'?page='+${end+1}" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">Next</a>
+          </li>
+       </ul>
+      </div>
+    </div>
+  </div>
+</div>
+    

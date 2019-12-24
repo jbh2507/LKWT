@@ -1,6 +1,6 @@
-package com.chiroro.service;
+package com.chiroro.lkwt_boot.service;
 
-import java.util.Optional;
+import java.util.List;
 
 import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.FileBox;
@@ -22,10 +22,18 @@ public interface FileBoxService {
     public boolean addSubmission(File file);
     //  과제 수정
     public boolean updateSubmission(File file);
+    //  과제 냇나 확인
+    public boolean isSubmited(long bno);
 
     //자료 확인
     //  자료 리스트
     public Page<FileBox> getLibList(Pageable page, SearchDTO dto);
     //  자료 열람
     public FileBox getLib(long bno);
+
+    //파일 목록
+    public List<File> getFileList(long bno);
+
+    //엑세스 로그
+    public void addAccesslog(long fno);
 }
