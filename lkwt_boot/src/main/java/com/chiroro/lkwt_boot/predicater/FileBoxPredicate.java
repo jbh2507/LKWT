@@ -26,7 +26,16 @@ public class FileBoxPredicate {
         if(category != null){
             if(category.contains("T")) builder.and(qfilebox.title.like("%"+keyword+"%"));
             if(category.contains("C")) builder.and(qfilebox.content.like("%"+keyword+"%"));
-            if(category.contains("W")) ;
+            if(category.contains("W")) {
+                
+                int key = -1;
+                try {
+                    key = Integer.parseInt(keyword);
+                } catch (Exception e) {
+                    //TODO: handle exception
+                }
+                builder.and(qfilebox.dayOfWeek.eq(key));
+            }
         }
        
         return builder;

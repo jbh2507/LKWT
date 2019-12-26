@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
 import com.chiroro.domain.FileBoxViewVO;
+import com.chiroro.domain.TaskViewVO;
 import com.chiroro.dto.PagingSource;
 
 import lombok.extern.log4j.Log4j;
@@ -88,6 +89,13 @@ public class FileBoxMapperTests {
 		long total = mapper.selectTotal(source);
 		
 		log.info(total+"\t selectTotal result");
+	}
+	
+	@Test
+	public void selectTask() {
+		TaskViewVO result = mapper.selectTask(22L);
+		
+		log.info(result);
 	}
 	
 }

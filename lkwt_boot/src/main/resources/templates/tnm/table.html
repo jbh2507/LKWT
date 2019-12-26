@@ -24,7 +24,149 @@
 
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <th:block th:include=@{~/fragments/ansFrag}></th:block>
+    <th:block th:include=@{~/fragments/postPop}></th:block>
     <script th:src=@{~/vendor/bootstrap/js/bootstrap.bundle.min.js}></script>
+
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            var curBno = null;
+
+            var tag = [[${tag}]];
+
+            var $pop = $("#pop");
+            var $postTitle = $("#postTitle");
+            var $postContent = $("#postContent");
+            var $postFiles = $("#files");
+            var $postTaskSubmit = $("#taskSubmit");
+            var $postFileInput = $("#fileInput");
+
+            var fileVO = null;
+
+            if(tag != 'T') {
+                $("#taskIcon").addClass("text-gray-300");
+                $("#resourceIcon").removeClass("text-gray-300");
+            }
+            if(tag != 'L') {
+                $("#resourceIcon").addClass("text-gray-300");
+                $("#taskIcon").removeClass("text-gray-300");
+            }
+
+            function setPostContent(filebox){
+                curBno = filebox.bno;
+
+                $postTitle.text(filebox.title);
+                $postContent.text(filebox.content);
+            }
+
+            function setFilesContent(files){
+                var filesContent = "";
+                        for(let i=0; i<files.length; i++){
+                            filesContent += "<div><a href='/tnm/resource/file/"+files[i].fno+"_"+files[i].regDate+"_"+files[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+files[i].fname+"</div>"
+                        }
+                        $postFiles.html(filesContent);
+            }
+
+            function callTask(bno){
+                $.ajax({
+                    url:"/tnm/task/"+bno,
+                    type:"GET",
+                    dataType:"json",
+                    success: function (result) {
+                        console.log(result);
+
+                        setPostContent(result.fileBox);
+                    }
+                });
+                $("#fileInputLable").hide();
+                $postTaskSubmit.show();
+                $postFileInput.show();
+            };
+
+            function callResoource(bno){
+                $.ajax({
+                    url:"/tnm/resource/"+bno,
+                    type:"GET",
+                    dataType:"json",
+                    success: function (result) {
+                        console.log(result);
+
+                        setPostContent(result.fileBox);
+
+                        setFilesContent(result.files);
+                    }
+                });
+
+                $postTaskSubmit.hide();
+                $postFileInput.hide();
+            };
+
+            // 팝업
+            $("#listBody").on("click", "tr td a", function (e) {
+                e.preventDefault();
+
+                var bno = $(this).attr("href");
+
+                if(tag == 'L') callResoource(bno);
+                if(tag == 'T') callTask(bno);
+                
+                $pop.show();
+            });
+
+            $("#postPopDown").on("click", function (e) {
+                e.preventDefault();
+
+                fileVO = null;
+
+                $pop.hide();
+            });
+
+            //파일 업로드
+            $postFileInput.on("change", function (){
+                var formData = new FormData();
+                var files = this.files
+
+                $("#fileInputLable").hide();
+                
+                for (let i = 0; i < files.length; i++) {
+                    formData.append("uploadfiles" , files[i]);
+                }
+                
+                $.ajax({
+                    url : [[${fileServer}]]+'/upload',
+                    processData : false,
+                    contentType : false,
+                    data : formData,
+                    type : 'POST',
+                    success : function(result) {
+                        fileVO = result[0];
+
+                        $("#fileInputLable").show();
+                    } // fnc
+                }); // $.ajax
+            });
+
+            // 과제 파일 등록
+            $postTaskSubmit.on("click", function(e){
+                e.preventDefault();
+
+                
+
+                fileVO = null;
+
+                $pop.hide();
+            });
+
+            // 검색 카테고리 전환시 placeholder 변경
+            $("select[name='category']").on("change", function () {
+                if(this.value === 'T') $keyword.attr("placeholder", "제목을 입력해주세요");
+                if(this.value === 'W') $keyword.attr("placeholder", "1~7");
+            });
+
+
+
+
+        }); // doc.ready()
+    </script>
 
 
 </body>

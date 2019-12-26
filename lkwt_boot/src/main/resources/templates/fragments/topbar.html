@@ -4,13 +4,13 @@
     <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100">
       <div class="row align-items-center d-flex ml-2">
         <div>
-          <a href="/tnm/task/board/1"><i class="fas fa-save"></i></a>
+          <a href="/tnm/task/board/1"><i id="taskIcon" class="fas fa-clipboard-list"></i></a>
         </div>
 
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <div>
-          <a href="/tnm/resource/board/1"><i class="fas fa-clipboard-list"></i></a>
+          <a href="/tnm/resource/board/1"><i id="resourceIcon" class="fas fa-save"></i></a>
         </div>
 
       </div>
@@ -24,7 +24,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i class="fas fa-bell fa-fw"></i>
           <!-- Counter - Alerts -->
-          <span class="badge badge-danger badge-counter">3+</span>
+          <span class="badge badge-danger badge-counter">test</span>
         </a>
         <!-- Dropdown - Alerts -->
         <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -39,7 +39,7 @@
             </div>
             <div>
               <div class="small text-gray-500">December 12, 2019</div>
-              <span class="font-weight-bold">A new monthly report is ready to download!</span>
+              <span class="font-weight-bold">test test test test test</span>
             </div>
           </a>
         </div>
@@ -51,7 +51,7 @@
       <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="mr-2 d-none d-lg-inline text-gray-600 small"  th:text="${userName}"></span>
-          <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+          <img class="img-profile rounded-circle" th:src="@{~/img/userIcon.png}">
         </a>
         <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">

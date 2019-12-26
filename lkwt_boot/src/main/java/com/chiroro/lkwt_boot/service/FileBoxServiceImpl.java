@@ -3,13 +3,16 @@ package com.chiroro.lkwt_boot.service;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import com.chiroro.lkwt_boot.domain.AccessLog;
 import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.FileBox;
+import com.chiroro.lkwt_boot.dto.FileDTO;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
+import com.chiroro.lkwt_boot.predicater.AccessLogPredicate;
 import com.chiroro.lkwt_boot.predicater.FileBoxPredicate;
 import com.chiroro.lkwt_boot.repository.AccessLogRepository;
 import com.chiroro.lkwt_boot.repository.FileBoxRepository;
@@ -67,9 +70,28 @@ public class FileBoxServiceImpl implements FileBoxService {
     }
     
     @Override
-    public boolean addSubmission(File file) {
+    public boolean addSubmission(FileDTO file) {
+        String userName = "tester";
+
+        SearchDTO search = new SearchDTO();
+        search.setCategory("UF");
+        search.setKeyword(userName);
+        search.setNo(file.getBno());
+
+        File fileVO = new File();
+        fileVO.setFname(file.getFname());
+        fileVO.setRegDate(file.getRegDate());
+        fileVO.setFileBox(boxRepo.getOne(file.getBno()));
+
+        long fno = logRepo.findOne(AccessLogPredicate.search(search)).get().getFile().getFno();
         try{
-            fileRepo.save(file);
+            fileRepo.deleteById(fno);
+            
+            AccessLog newLog = new AccessLog();
+            newLog.setFile(fileRepo.save(fileVO));
+            newLog.setUserName(userName);
+
+            logRepo.save(newLog);
         } catch(Exception e){
             return false;
         }
@@ -77,10 +99,31 @@ public class FileBoxServiceImpl implements FileBoxService {
     }
     
     @Override
-    public boolean updateSubmission(File file) {
+    public boolean updateSubmission(FileDTO file) {
+        String userName = "tester";
+
+        SearchDTO search = new SearchDTO();
+        search.setCategory("UF");
+        search.setKeyword(userName);
+        search.setNo(file.getBno());
+
+        File fileVO = new File();
+        fileVO.setFname(file.getFname());
+        fileVO.setRegDate(file.getRegDate());
+        fileVO.setFileBox(boxRepo.getOne(file.getBno()));
+
+        Optional<AccessLog> casedLog = logRepo.findOne(AccessLogPredicate.search(search));
+        if(casedLog.isPresent()){
+            long fno = casedLog.get().getFile().getFno();
+            fileRepo.deleteById(fno);
+
+        }
         try{
-            fileRepo.deleteById(file.getFno());
-            fileRepo.save(file);
+            AccessLog newLog = new AccessLog();
+            newLog.setFile(fileRepo.save(fileVO));
+            newLog.setUserName(userName);
+
+            logRepo.save(newLog);
         } catch(Exception e){
             return false;
         }
@@ -99,19 +142,16 @@ public class FileBoxServiceImpl implements FileBoxService {
 
     @Override
     public boolean isSubmited(long bno) {
-
-        List<File> list = fileRepo.findByFileBox(boxRepo.getOne(bno));
-
-        String userName = "tester";
-
-        boolean isExist = false;
-        for(File file : list){
-            String fname = file.getFname();
-
-            if(fname.contains(userName)) isExist = true;
-        } 
         
-        return isExist;
+        SearchDTO dto = new SearchDTO();
+
+        dto.setNo(bno);
+        dto.setCategory("UF");
+        dto.setKeyword("tester");
+
+        boolean result = logRepo.exists(AccessLogPredicate.search(dto));
+        
+        return result;
     }
 
     @Override
@@ -124,4 +164,6 @@ public class FileBoxServiceImpl implements FileBoxService {
         logRepo.save(access);
         
     }
+
+    
 }

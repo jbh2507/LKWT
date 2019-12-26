@@ -5,6 +5,7 @@ import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
 import com.chiroro.domain.FileBoxViewVO;
 import com.chiroro.domain.FileVO;
+import com.chiroro.domain.TaskViewVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
 
@@ -15,7 +16,7 @@ public interface FileBoxService {
 	//과제 리스트
 	public PageDTO<FileBoxListVO> getTaskList(PagingSource source);
 	//과제 조회
-	public FileBoxViewVO getTask(long bno);
+	public TaskViewVO getTask(long bno);
 	//과제 업데이트
 	public void updateTask(FileBoxVO vo);
 	

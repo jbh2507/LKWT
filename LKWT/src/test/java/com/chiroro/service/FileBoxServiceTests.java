@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.chiroro.domain.AccessLogListVO;
@@ -20,6 +19,7 @@ import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
 import com.chiroro.domain.FileBoxViewVO;
 import com.chiroro.domain.FileVO;
+import com.chiroro.domain.TaskViewVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
 
@@ -66,7 +66,7 @@ public class FileBoxServiceTests {
 	
 	@Test
 	public void getTask() {
-		FileBoxViewVO task = service.getTask(1L);
+		TaskViewVO task = service.getTask(1L);
 		
 		log.info(task+"\tgetTask result");
 	}
@@ -137,7 +137,7 @@ public class FileBoxServiceTests {
 	
 	@Test
 	public void getLogTest() {
-		source.setNo(30L);
+		source.setNo(31L);
 		PageDTO<AccessLogListVO> dto = service.getAccessLog(source);
 		
 		log.info("===============\tgetLogList result");

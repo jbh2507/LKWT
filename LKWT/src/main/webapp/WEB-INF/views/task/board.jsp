@@ -190,7 +190,7 @@ $(document).ready(function() {
 				
 				var filesContent = "";
 				for(let i=0; i<files.length; i++){
-					filesContent += "<div><a href='/download/?down="+files[i].regDate+"_"+files[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+files[i].fname+"</div>"
+					filesContent += "<div><a href='/download/?data="+data[i].fno+"_"+data[i].regDate+"_"+data[i].fname+"' class='downloadBtn btn'><i class='fas fa-download'></i></a>"+files[i].fname+"  제출자: "+files[i].userName+"</div>"
 				}
 				$files.html(filesContent);
 			}

@@ -15,6 +15,8 @@ public interface FileMapper{
 	
 	public List<FileListVO> selectList(long bno);
 	
+	public List<FileListVO> selectListInTask(long bno, String userName);
+	
 	//d
 	public void delete(long fno);
 }

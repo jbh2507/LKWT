@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.FileBox;
+import com.chiroro.lkwt_boot.dto.FileDTO;
+import com.chiroro.lkwt_boot.dto.ResourceDTO;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
+import com.chiroro.lkwt_boot.dto.TaskDTO;
 import com.chiroro.lkwt_boot.service.FileBoxService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,7 @@ public class MainController {
     @Setter(onMethod_ = @Autowired)
     private FileBoxService service;
 
-    private final String FILE_URL = "localhost:8080/file/download?data=";
+    private final String FILE_URL = "localhost:8080/";
 
     @GetMapping("/main")
     public void tnm(Model model){
@@ -55,15 +58,22 @@ public class MainController {
         Page<FileBox> result = service.getTaskList(pageable, searchDTO);
 
         model.addAttribute("pageDTO", result);
+        model.addAttribute("tag", 'T');
+        model.addAttribute("fileServer", FILE_URL);
 
         return "tnm/table";
     }
 
     @GetMapping("/task/{bno}")
     @ResponseBody
-    public ResponseEntity<FileBox> GETTask(@PathVariable long bno){
+    public ResponseEntity<TaskDTO> GETTask(@PathVariable long bno){
+        TaskDTO result = new TaskDTO();
+ 
+        FileBox box = service.getTask(bno);
+        result.setFileBox(box);
+        result.setSubmited(service.isSubmited(bno));
 
-        return new ResponseEntity<>(service.getTask(bno), HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
@@ -75,20 +85,26 @@ public class MainController {
         Page<FileBox> result = service.getLibList(pageable, searchDTO);
 
         model.addAttribute("pageDTO", result);
+        model.addAttribute("tag", 'L');
+        model.addAttribute("fileServer", FILE_URL);
 
         return "tnm/table";
     }
 
     @GetMapping("/resource/{bno}")
     @ResponseBody
-    public ResponseEntity<FileBox> GETResorce(@PathVariable long bno){
+    public ResponseEntity<ResourceDTO> GETResorce(@PathVariable long bno){
+        ResourceDTO result = new ResourceDTO();
         
+        FileBox box = service.getLib(bno);
+        result.setFileBox(box);
+        result.setFiles(box.getFiles());
 
-        return new ResponseEntity<>(service.getLib(bno), HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     
-    @GetMapping("file/list/{bno}")
+    @GetMapping("/file/list/{bno}")
     @ResponseBody
     public ResponseEntity<List<File>> GETFileList(@PathVariable long bno){
         List<File> result = service.getFileList(bno);
@@ -96,20 +112,14 @@ public class MainController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("task/submit/")
+    @PostMapping("/task/submit/")
     @ResponseBody
-    public void POSTFile(String data){
-        File tmpVO = new File();
-				
-        int idx = data.indexOf('_');
+    public void POSTFile(FileDTO dto){
         
-        tmpVO.setFname(data.substring(idx+1));
-        tmpVO.setRegDate(new Date(Long.parseLong(data.substring(0, idx))));
-
-        service.addSubmission(tmpVO);
+        service.addSubmission(dto);
     }
 
-    @GetMapping("resource/file/{data}")
+    @GetMapping("/resource/file/{data}")
     @ResponseBody
     public void GETFile(@PathVariable String data, HttpServletResponse res) {
 
@@ -119,7 +129,7 @@ public class MainController {
         service.addAccesslog(fno);
         
         try {
-            res.sendRedirect(FILE_URL+data);
+            res.sendRedirect(FILE_URL+"download?data="+data);
         } catch (Exception e) {
             //TODO: handle exception
         }

@@ -41,8 +41,7 @@
 			<result column="file_box_bno" property="bno"/>
 		</association>
 	</resultMap>
-
-
+	
 	<delete id="delete">
 		DELETE FROM file
 		WHERE fno = #{fno}

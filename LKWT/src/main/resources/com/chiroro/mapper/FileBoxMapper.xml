@@ -33,6 +33,35 @@
 		<result column="file_box_bno" property="bno"/>
 	</resultMap>
 	
+	<select id="selectTask" resultMap="TaskViewMap">
+		SELECT b.bno, cno, content, b.reg_date regdate, tag,
+			title, f.fno, f.fname, f.reg_date, SUBSTRING(f.fname, LOCATE('_', f.fname)+1) orginname,
+			a.username username
+		FROM filebox b
+		LEFT JOIN file f ON b.bno = f.file_box_bno
+		LEFT JOIN accesslog a ON f.fno = a.file_fno
+		WHERE bno = ${bno}
+	</select>
+	
+	<resultMap type="com.chiroro.domain.TaskViewVO" id="TaskViewMap">
+		<id column="bno" property="filebox.bno"/>
+		<association property="filebox" javaType="com.chiroro.domain.FileBoxVO" autoMapping="true">
+		</association>
+		
+		<collection property="files" resultMap="TaskfilesMap">
+		</collection>
+	</resultMap>
+	
+	<resultMap type="com.chiroro.domain.TaskFileVO" id="TaskfilesMap">
+		<id column="fno" property="fno"/>
+		<result column="fname" property="fname"/>
+		<result column="orginname" property="orginName"/>
+		<result column="reg_date" property="regDate"/>
+		<result column="file_box_bno" property="bno"/>
+		<result column="userName" property="userName"/>
+	</resultMap>
+	
+	
 	<select id="selectList" resultMap="fileboxListMap">
 		SELECT b.bno, b.title, b.reg_date regdate, 
 			CAST((COUNT(fno) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate

@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.chiroro.domain.AccessLogListVO;
 import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
-import com.chiroro.domain.FileBoxViewVO;
+import com.chiroro.domain.TaskViewVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
 import com.chiroro.service.ClassService;
@@ -51,8 +52,8 @@ public class TaskBoardController {
 	
 	@GetMapping("/{bno}")
 	@ResponseBody
-	public ResponseEntity<FileBoxViewVO> GETtask(@PathVariable long bno) {
-		FileBoxViewVO result = boxService.getTask(bno);
+	public ResponseEntity<TaskViewVO> GETtask(@PathVariable long bno) {
+		TaskViewVO result = boxService.getTask(bno);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
@@ -77,6 +78,16 @@ public class TaskBoardController {
 	public ResponseEntity<Object> DELETEtask(@PathVariable long bno) {
 		boxService.delete(bno);
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	@GetMapping("/accesslog/{bno}")
+	@ResponseBody
+	public ResponseEntity<PageDTO<AccessLogListVO>> GETAccesslog(PagingSource source, @PathVariable long bno) {
+		source.setNo(bno);
+		
+		PageDTO<AccessLogListVO> result = boxService.getAccessLog(source);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 }

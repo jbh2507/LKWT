@@ -10,8 +10,8 @@ import com.chiroro.domain.AccessLogListVO;
 import com.chiroro.domain.FileBoxListVO;
 import com.chiroro.domain.FileBoxVO;
 import com.chiroro.domain.FileBoxViewVO;
-import com.chiroro.domain.FileListVO;
 import com.chiroro.domain.FileVO;
+import com.chiroro.domain.TaskViewVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
 import com.chiroro.mapper.AccessLogMapper;
@@ -51,11 +51,12 @@ public class FileBoxServiceImpl implements FileBoxService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public FileBoxViewVO getTask(long bno) {
-		FileBoxViewVO view = fileboxMapper.selectOne(bno);
+	public TaskViewVO getTask(long bno) {
+		TaskViewVO view = fileboxMapper.selectTask(bno);
+		log.info(view);
 		if(view.getFilebox().getTag() != 'T') throw new IllegalArgumentException("bno: "+bno+" is not Task's bno");
 		
-		return fileboxMapper.selectOne(bno);
+		return view;
 	}
 	
 	@Override

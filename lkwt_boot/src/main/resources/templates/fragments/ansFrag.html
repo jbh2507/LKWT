@@ -4,7 +4,7 @@
 
 <script th:inline="javascript">
     $(document).ready(function (){
-        //var socket = io("10.10.10.132:3000");
+        var socket = io("10.10.10.132:3000");
         //localhost:3000
         //10.10.10.132:3000
 
@@ -91,14 +91,14 @@
             socket.emit("answer", data);
         });
 
-        //socket.emit("setStudent", {cno:1, userName:[[ ${userName} ]] });
+        socket.emit("setStudent", {cno:1, userName:[[ ${userName} ]] });
 
-        // socket.on("requestAnswer", function (data){
-        //     console.log(data);
+        socket.on("requestAnswer", function (data){
+            console.log(data);
 
-        //     setAnsPop(data);
-        //     $ansPop.show();
+            setAnsPop(data);
+            $ansPop.show();
 
-        // });
+        });
     });
 </script>

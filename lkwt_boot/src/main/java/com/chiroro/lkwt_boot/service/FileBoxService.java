@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.FileBox;
+import com.chiroro.lkwt_boot.dto.FileDTO;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
 
 import org.springframework.data.domain.Page;
@@ -19,9 +20,9 @@ public interface FileBoxService {
     //  과제 열람
     public FileBox getTask(long bno);
     //  과제 제출
-    public boolean addSubmission(File file);
+    public boolean addSubmission(FileDTO file);
     //  과제 수정
-    public boolean updateSubmission(File file);
+    public boolean updateSubmission(FileDTO file);
     //  과제 냇나 확인
     public boolean isSubmited(long bno);
 
