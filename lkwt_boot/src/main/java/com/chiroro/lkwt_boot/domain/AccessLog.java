@@ -30,8 +30,8 @@ public class AccessLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long lno;
 
-    @Column(name = "username")
-    private String userName;
+    @ManyToOne
+    private User user;
 
     @ManyToOne
     @JsonIgnore

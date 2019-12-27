@@ -10,6 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
@@ -34,7 +35,8 @@ public class FileBox {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bno;
     
-    private Long cno;
+    @ManyToOne
+    private Lecture lecture;
 
     private Character tag;
 

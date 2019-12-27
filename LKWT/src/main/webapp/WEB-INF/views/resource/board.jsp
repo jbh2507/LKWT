@@ -364,10 +364,9 @@ $(document).ready(function() {
 			data : formData,
 			type : 'POST',
 			success : function(result) {
-				for(let i = 0; i < result.length; i++){
-					let json = result[i]
-					viewFile(result, $regFileView);
-				}
+				
+				viewFile(result, $regFileView);
+				
 			} // fnc
 		}); // $.ajax
 	}); // fileInput change

@@ -4,7 +4,6 @@ import com.chiroro.lkwt_boot.domain.QAccessLog;
 import com.chiroro.lkwt_boot.domain.QFile;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
 
 /**
@@ -23,7 +22,7 @@ public class FilePredicate {
         
         if(category != null){
             if(category.contains("N")) builder.and(qFile.fname.like("%"+keyword+"%"));
-            if(category.contains("U")) builder.and(qFile.accesslog.contains((Expression) qLog.userName.eq(keyword)));
+           
         }
 
         return builder;

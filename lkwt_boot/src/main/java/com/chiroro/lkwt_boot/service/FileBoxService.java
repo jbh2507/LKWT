@@ -21,8 +21,6 @@ public interface FileBoxService {
     public FileBox getTask(long bno);
     //  과제 제출
     public boolean addSubmission(FileDTO file);
-    //  과제 수정
-    public boolean updateSubmission(FileDTO file);
     //  과제 냇나 확인
     public boolean isSubmited(long bno);
 

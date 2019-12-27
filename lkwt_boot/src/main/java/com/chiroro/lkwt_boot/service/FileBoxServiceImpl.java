@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import com.chiroro.lkwt_boot.domain.AccessLog;
 import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.FileBox;
+import com.chiroro.lkwt_boot.domain.User;
 import com.chiroro.lkwt_boot.dto.FileDTO;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
 import com.chiroro.lkwt_boot.predicater.AccessLogPredicate;
@@ -17,6 +18,7 @@ import com.chiroro.lkwt_boot.predicater.FileBoxPredicate;
 import com.chiroro.lkwt_boot.repository.AccessLogRepository;
 import com.chiroro.lkwt_boot.repository.FileBoxRepository;
 import com.chiroro.lkwt_boot.repository.FileRepository;
+import com.chiroro.lkwt_boot.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,6 +42,9 @@ public class FileBoxServiceImpl implements FileBoxService {
 
     @Setter(onMethod_ = @Autowired)
     private AccessLogRepository logRepo;
+
+    @Setter(onMethod_ = @Autowired)
+    private UserRepository userRepo;
 
     @Override
     public FileBox getLib(long bno) {
@@ -72,35 +77,7 @@ public class FileBoxServiceImpl implements FileBoxService {
     @Override
     public boolean addSubmission(FileDTO file) {
         String userName = "tester";
-
-        SearchDTO search = new SearchDTO();
-        search.setCategory("UF");
-        search.setKeyword(userName);
-        search.setNo(file.getBno());
-
-        File fileVO = new File();
-        fileVO.setFname(file.getFname());
-        fileVO.setRegDate(file.getRegDate());
-        fileVO.setFileBox(boxRepo.getOne(file.getBno()));
-
-        long fno = logRepo.findOne(AccessLogPredicate.search(search)).get().getFile().getFno();
-        try{
-            fileRepo.deleteById(fno);
-            
-            AccessLog newLog = new AccessLog();
-            newLog.setFile(fileRepo.save(fileVO));
-            newLog.setUserName(userName);
-
-            logRepo.save(newLog);
-        } catch(Exception e){
-            return false;
-        }
-        return true;
-    }
-    
-    @Override
-    public boolean updateSubmission(FileDTO file) {
-        String userName = "tester";
+        User user = userRepo.getOne(userName);
 
         SearchDTO search = new SearchDTO();
         search.setCategory("UF");
@@ -121,7 +98,7 @@ public class FileBoxServiceImpl implements FileBoxService {
         try{
             AccessLog newLog = new AccessLog();
             newLog.setFile(fileRepo.save(fileVO));
-            newLog.setUserName(userName);
+            newLog.setUser(user);
 
             logRepo.save(newLog);
         } catch(Exception e){
@@ -129,7 +106,7 @@ public class FileBoxServiceImpl implements FileBoxService {
         }
         return true;
     }
-
+    
     @Override
     public List<File> getFileList(long bno) {
 
@@ -156,11 +133,12 @@ public class FileBoxServiceImpl implements FileBoxService {
 
     @Override
     public void addAccesslog(long fno) {
+        String userName = "tester";
+        User user = userRepo.getOne(userName);
 
         AccessLog access = new AccessLog();
         access.setFile(fileRepo.getOne(fno));
-        access.setUserName("tester");
-
+        access.setUser(user);
         logRepo.save(access);
         
     }

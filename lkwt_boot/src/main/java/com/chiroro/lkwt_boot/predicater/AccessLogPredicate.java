@@ -1,9 +1,7 @@
 package com.chiroro.lkwt_boot.predicater;
 
 
-import com.chiroro.lkwt_boot.domain.File;
 import com.chiroro.lkwt_boot.domain.QAccessLog;
-import com.chiroro.lkwt_boot.domain.QFileBox;
 import com.chiroro.lkwt_boot.dto.SearchDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -23,7 +21,7 @@ public class AccessLogPredicate {
         
         if(category != null){
             if(category.contains("F")) builder.and(qLog.file.fileBox.bno.eq(dto.getNo()));
-            if(category.contains("U")) builder.and(qLog.userName.eq(keyword));
+            if(category.contains("U")) builder.and(qLog.user.username.eq(keyword));
         }
 
         return builder;

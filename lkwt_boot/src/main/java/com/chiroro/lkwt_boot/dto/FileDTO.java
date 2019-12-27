@@ -12,5 +12,9 @@ public class FileDTO {
     private Long bno;
     private String fname;
     private Date regDate;
+
+    public void setRegDate(Long milsec){
+        this.regDate = new Date(milsec);
+    }
     
 }

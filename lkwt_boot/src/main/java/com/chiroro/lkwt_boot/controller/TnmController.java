@@ -37,17 +37,18 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/tnm/*")
 @Slf4j
-public class MainController {
+public class TnmController {
 
     @Setter(onMethod_ = @Autowired)
     private FileBoxService service;
 
-    private final String FILE_URL = "localhost:8080/";
+    private final String FILE_URL = "http://10.10.10.132:8080/";
 
     @GetMapping("/main")
     public void tnm(Model model){
         System.out.println("\t TNM");
         model.addAttribute("userName", "tester"+(char)('A'+(int)(Math.random()*21)));
+        
     }
 
     @GetMapping("/task/board/{cno}")
@@ -56,6 +57,8 @@ public class MainController {
         searchDTO.setNo(cno);
 
         Page<FileBox> result = service.getTaskList(pageable, searchDTO);
+
+        model.addAttribute("userName", "tester"+(char)('A'+(int)(Math.random()*21)));
 
         model.addAttribute("pageDTO", result);
         model.addAttribute("tag", 'T');
@@ -83,6 +86,8 @@ public class MainController {
         searchDTO.setNo(cno);
 
         Page<FileBox> result = service.getLibList(pageable, searchDTO);
+
+        model.addAttribute("userName", "tester"+(char)('A'+(int)(Math.random()*21)));
 
         model.addAttribute("pageDTO", result);
         model.addAttribute("tag", 'L');
@@ -112,10 +117,10 @@ public class MainController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping("/task/submit/")
+    @PostMapping("/task/submit")
     @ResponseBody
     public void POSTFile(FileDTO dto){
-        
+    
         service.addSubmission(dto);
     }
 

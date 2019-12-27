@@ -19,7 +19,7 @@ public class FileBoxPredicate {
         String keyword = dto.getKeyword();
         BooleanBuilder builder = new BooleanBuilder();
 
-        builder.and(qfilebox.cno.eq(dto.getNo()));
+        builder.and(qfilebox.lecture.cno.eq(dto.getNo()));
         builder.and(qfilebox.tag.eq(dto.getTag()));
 
         // 검색
