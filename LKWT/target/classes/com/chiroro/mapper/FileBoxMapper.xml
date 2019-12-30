@@ -5,12 +5,12 @@
 
 <mapper namespace="com.chiroro.mapper.FileBoxMapper">
 	<insert id="insert">
-		INSERT INTO filebox(cno, tag, title, content, reg_date, day_of_week)
+		INSERT INTO filebox(lecture_cno, tag, title, content, reg_date, day_of_week)
 		VALUES(#{cno}, #{tag}, #{title}, #{content}, now(), DAYOFWEEK(now()))
 	</insert>
 	
 	<select id="selectOne" resultMap="fileboxViewMap">
-		SELECT b.bno, cno, content, b.reg_date regdate, tag, title, f.fno, f.fname, f.reg_date, SUBSTRING(f.fname, LOCATE('_', f.fname)+1) orginname
+		SELECT b.bno, lecture_cno, content, b.reg_date regdate, tag, title, f.fno, f.fname, f.reg_date, SUBSTRING(f.fname, LOCATE('_', f.fname)+1) orginname
 		FROM filebox b
 		LEFT JOIN file f ON b.bno = f.file_box_bno
 		WHERE bno = ${bno}
@@ -34,9 +34,9 @@
 	</resultMap>
 	
 	<select id="selectTask" resultMap="TaskViewMap">
-		SELECT b.bno, cno, content, b.reg_date regdate, tag,
+		SELECT b.bno, lecture_cno, content, b.reg_date regdate, tag,
 			title, f.fno, f.fname, f.reg_date, SUBSTRING(f.fname, LOCATE('_', f.fname)+1) orginname,
-			a.username username
+			a.user_username username
 		FROM filebox b
 		LEFT JOIN file f ON b.bno = f.file_box_bno
 		LEFT JOIN accesslog a ON f.fno = a.file_fno
@@ -64,10 +64,10 @@
 	
 	<select id="selectList" resultMap="fileboxListMap">
 		SELECT b.bno, b.title, b.reg_date regdate, 
-			CAST((COUNT(fno) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate
+			CAST((COUNT(fno) / (SELECT COUNT(username) FROM student WHERE lecture_cno = #{no}) *100) AS signed integer) rate
 		FROM filebox b
 		LEFT JOIN file f ON b.bno = f.file_box_bno
-		WHERE cno = #{no}
+		WHERE lecture_cno = #{no}
 		AND tag = #{tag}
 		<include refid="where"/>
 		GROUP BY b.bno
@@ -107,7 +107,7 @@
 	<select id="selectTotal" resultType="long">
 		SELECT count(bno)
 		FROM filebox b
-		WHERE cno = #{no}
+		WHERE lecture_cno = #{no}
 		AND tag = #{tag}
 		<include refid="where"/>
 	</select>

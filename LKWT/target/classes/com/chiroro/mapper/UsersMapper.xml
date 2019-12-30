@@ -6,8 +6,8 @@
 <mapper namespace="com.chiroro.mapper.UsersMapper">
 
 <insert id="insert">
-	INSERT INTO users(username, password)
-	VALUES(#{userName}, #{password})
+	INSERT INTO user(username, password, regdate)
+	VALUES(#{userName}, #{password}, now())
 </insert>
 
 </mapper>

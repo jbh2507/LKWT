@@ -4,13 +4,13 @@
     <div class="d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100">
       <div class="row align-items-center d-flex ml-2">
         <div>
-          <a href="/tnm/task/board/1"><i id="taskIcon" class="fas fa-clipboard-list"></i></a>
+          <a href="/tnm/task/board"><i id="taskIcon" class="fas fa-clipboard-list"></i></a>
         </div>
 
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <div>
-          <a href="/tnm/resource/board/1"><i id="resourceIcon" class="fas fa-save"></i></a>
+          <a href="/tnm/resource/board"><i id="resourceIcon" class="fas fa-save"></i></a>
         </div>
 
       </div>
@@ -60,10 +60,16 @@
             Settings
           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-            Logout
-          </a>
+          <div class="dropdown-item">
+            <form action="/logout" method="POST">
+              <input type="hidden" th:name="${_csrf.parameterName}"  th:value="${_csrf.token}" />
+              <button  href="#" data-toggle="modal" data-target="#logoutModal">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                Logout
+              </button>
+            
+            </form>
+          </div>
         </div>
       </li>
 

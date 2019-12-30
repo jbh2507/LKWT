@@ -2,6 +2,7 @@ package com.chiroro.lkwt_boot.domain;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
@@ -11,7 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,8 +45,10 @@ public class User implements UserDetails {
     @Column(name = "regdate")
     private LocalDateTime regDate;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Lecture> lectures; 
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(joinColumns = {@JoinColumn(name = "username")}, name = "authorities")
     private Set<Role> authorities;
 
@@ -57,7 +60,7 @@ public class User implements UserDetails {
     }
 
     @Override
-	public Collection<Role> getAuthorities() {
+	public Set<Role> getAuthorities() {
 		return authorities;
 	}
 
@@ -91,4 +94,9 @@ public class User implements UserDetails {
 		return credentialsNonExpired;
 	}
 
-}
+    public void setLecture(Lecture lecture){
+        if(lectures == null) lectures = new HashSet<>();
+        
+        this.lectures.add(lecture);
+    }
+} 
