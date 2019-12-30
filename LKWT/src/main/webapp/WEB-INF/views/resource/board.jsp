@@ -49,7 +49,7 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">{class name}</h6>
+              <h6 class="m-0 font-weight-bold text-primary"><c:out value="${letureName}"/></h6>
             </div>
             <div class="card-body">
      

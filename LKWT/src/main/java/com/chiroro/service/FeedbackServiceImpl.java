@@ -9,11 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.chiroro.domain.AnsCommentVO;
 import com.chiroro.domain.AnswerAndAnsCommentVO;
+import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.AnswerVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
+import com.chiroro.dto.SearchDTO;
 import com.chiroro.mapper.AnsCommentMapper;
 import com.chiroro.mapper.AnswerMapper;
 import com.chiroro.mapper.QuestionMapper;
@@ -77,6 +79,12 @@ public class FeedbackServiceImpl implements FeedbackService{
 	public List<AnswerAndAnsCommentVO> getAnswerList(long qno) {
 		
 		return answerMapper.selectJoinedList(qno);
+	}
+	
+	@Override
+	public List<AnswerDataVO> getQuestionList(SearchDTO dto){
+		
+		return questionMapper.selectWhere(dto);
 	}
 
 }

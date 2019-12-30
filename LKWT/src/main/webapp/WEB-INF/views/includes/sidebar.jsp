@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <!-- Sidebar -->
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
@@ -26,21 +27,24 @@
       <div class="sidebar-heading">
         CLASS
       </div>
-
-      <!-- 클래스 -->
+		
+	  <c:forEach items="${lectures}" var="leture">
+	  	
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-table"></i>
-          <span>{class name}</span>
+          <span><c:out value="${leture.cname}"/></span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <a class="collapse-item" href="/feedback/board/1">Feedback</a>
-            <a class="collapse-item" href="/task/board/1">Task</a>
-            <a class="collapse-item" href="/resource/board/1">Lib</a>
+            <a class="collapse-item" href="/feedback/board/<c:out value="${leture.cno}"/>">Feedback</a>
+            <a class="collapse-item" href="/task/board/<c:out value="${leture.cno}"/>">Task</a>
+            <a class="collapse-item" href="/resource/board/<c:out value="${leture.cno}"/>">Lib</a>
           </div>
         </div>
       </li>
+	  </c:forEach>
+      <!-- 클래스 -->
 
       <!-- Divider -->
       <hr class="sidebar-divider">
@@ -52,7 +56,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="/datacenter">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>통계</span></a>
       </li>

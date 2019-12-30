@@ -5,10 +5,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.chiroro.domain.AnswerAndAnsCommentVO;
+import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
+import com.chiroro.dto.SearchDTO;
 
 @Service
 public interface FeedbackService {
@@ -26,4 +28,6 @@ public interface FeedbackService {
 	
 	//피드백 응답 가져오기
 	public List<AnswerAndAnsCommentVO> getAnswerList(long qno);
+	
+	public List<AnswerDataVO> getQuestionList(SearchDTO dto);
 }

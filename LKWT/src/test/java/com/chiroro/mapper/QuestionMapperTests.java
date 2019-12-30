@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class QuestionMapperTests {
 	public void ready() {
 		vo = new QuestionVO();
 		vo.setCno(1L);
-		vo.setCategory("이해도");
+		vo.setCategory("진행도");
 	}
 	
 	@Test
@@ -43,9 +44,10 @@ public class QuestionMapperTests {
 	@Test
 	public void insertTest() {
 		
-		vo.setContent("test Q");
-			
-		mapper.insert(vo);
+		IntStream.range(0, 201).forEach(i->{
+			vo.setContent("test P: "+i);
+			mapper.insert(vo);			
+		});
 		
 	}
 	

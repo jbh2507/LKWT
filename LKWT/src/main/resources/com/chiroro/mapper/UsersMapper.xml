@@ -10,4 +10,47 @@
 	VALUES(#{userName}, #{password}, now())
 </insert>
 
+<select id="selectDetail" resultMap="detailMap">
+	SELECT u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked,
+		 u.credentials_non_expired, u.regdate,	a.authority, l.cno, l.cname
+    from
+        user u
+    left join
+        authorities a
+            on u.username = a.username 
+    left join
+        user_lectures i
+            on u.username = i.user_username 
+    left outer join
+        lecture l
+            on i.lectures_cno = l.cno 
+    where
+        u.username= #{username}
+</select>
+
+	<resultMap type="com.chiroro.domain.UserDetailVO" id="detailMap">
+		<id column="username" property="username"/>
+		<result column="password" property="password"/>
+		<result column="enabled" property="enabled"/>
+		<result column="accountNonExpired" property="account_Non_Expired"/>
+		<result column="accountNonLocked" property="account_Non_Locked"/>
+		<result column="credentialsNonExpired" property="credentials_Non_Expired"/>
+		<result column="regDate" property="regDate"/>
+		
+		<collection property="authorities" resultMap="RoleMap">
+		</collection>
+		
+		<collection property="lectures" resultMap="ClasseMap">
+		</collection>
+	</resultMap>
+	
+	<resultMap type="com.chiroro.domain.RoleVO" id="RoleMap">
+		<result column="authority" property="authority"/>
+	</resultMap>
+	
+	<resultMap type="com.chiroro.domain.ClassVO" id="ClasseMap">
+		<id column="cno" property="cno"/>
+		<result column="cname" property="cname"/>
+	</resultMap>
+
 </mapper>

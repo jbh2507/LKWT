@@ -14,65 +14,56 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.chiroro.domain.AnswerAndAnsCommentVO;
+import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.ClassVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.domain.UserDetailVO;
-import com.chiroro.dto.PageDTO;
-import com.chiroro.dto.PagingSource;
+import com.chiroro.dto.SearchDTO;
 import com.chiroro.service.FeedbackService;
 
 import lombok.Setter;
-import lombok.extern.log4j.Log4j;
 
 @Controller
-@RequestMapping("/feedback/*")
-@Log4j
-public class FeedbackController {
+@RequestMapping("/datacenter")
+public class DataCenterController {
 	
 	@Setter(onMethod_ = @Autowired)
-	private FeedbackService service;
+	private FeedbackService feedService;
 	
-	// question List
-	@GetMapping("/board/{cno}")
-	public String GETFeedback(PagingSource source, @PathVariable Long cno, Model model) {
-		source.setNo(cno);
-		
+	@GetMapping()
+	public String GETDataCenter(Model model) {
 		Authentication authen = SecurityContextHolder.getContext().getAuthentication();
 		List<ClassVO> classList = ((UserDetailVO)authen.getPrincipal()).getLectures();
 		model.addAttribute("lectures", classList);
 		
-		String cname = "";
-		for(ClassVO leture : classList) {
-			if(leture.getCno() == cno) cname = leture.getCname();
-		}
-		model.addAttribute("letureName", cname);
-		
-		PageDTO<QuestionListVO> pageDTO = service.getQuestionList(source);
-		model.addAttribute("pageDTO",pageDTO);
-		log.info("\tpageDTO: "+pageDTO);
-		
-		return "feedback/board";
+		return "/datacenter/center";
 	}
 	
-	// question
+	@GetMapping("/questionlist")
+	@ResponseBody
+	public ResponseEntity<List<AnswerDataVO>> GETQuestionList(SearchDTO dto){
+		
+		Authentication authen = SecurityContextHolder.getContext().getAuthentication();
+		List<ClassVO> classList = ((UserDetailVO)authen.getPrincipal()).getLectures();
+		
+		boolean isNonExist = true;
+		for(ClassVO vo : classList) {
+			if(vo.getCno() == dto.getNo()) isNonExist = false;
+		}
+		if(isNonExist) throw new IllegalArgumentException("user can not access to cno: "+ dto.getNo());
+		
+		List<AnswerDataVO> result = feedService.getQuestionList(dto);
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+	
 	@GetMapping("/question/{qno}")
 	@ResponseBody
 	public ResponseEntity<QuestionVO> GETQuestion(@PathVariable Integer qno){
-		log.info(qno+"\tREST GET question");
 		
-		QuestionVO result = service.getQuestion(qno);
+		QuestionVO result = feedService.getQuestion(qno);
 		return new ResponseEntity<QuestionVO>(result, HttpStatus.OK);
-	}
-	
-	// answerList
-	@GetMapping("/question/{qno}/answerList")
-	@ResponseBody
-	public ResponseEntity<List<AnswerAndAnsCommentVO>> GETAnswerList(@PathVariable Integer qno){
-		log.info(qno+"\tREST GET answerList");
-		List<AnswerAndAnsCommentVO> result = service.getAnswerList(qno);
-		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 	
 	

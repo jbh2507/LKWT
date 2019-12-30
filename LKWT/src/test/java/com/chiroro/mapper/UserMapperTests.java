@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.chiroro.domain.UserDetailVO;
 import com.chiroro.domain.UserVO;
 
 import lombok.extern.log4j.Log4j;
@@ -37,12 +38,12 @@ public class UserMapperTests {
 	
 	@Test
 	public void insert() {
-		IntStream.range(0, 20).forEach(i -> {
-			vo.setUserName("tester"+(char)('A'+i%20));
-			vo.setPassword(vo.getUserName());
-			
-			mapper.insert(vo);
-			log.info(vo+"\t inserted vo");
-		});
+		
+	}
+	
+	@Test
+	public void selectDetail() {
+		UserDetailVO userDetail = mapper.selectDetail("tester");
+		log.info(userDetail);
 	}
 }

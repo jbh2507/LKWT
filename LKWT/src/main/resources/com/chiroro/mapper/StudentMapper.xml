@@ -6,20 +6,20 @@
 <mapper namespace="com.chiroro.mapper.StudentMapper">
 
 	<insert id="insert">
-		INSERT INTO lecture_users
+		INSERT INTO user_lectures
 		VALUES(#{cno}, #{userName})
 	</insert>
 	
 	<select id="selectCount" resultType="int">
-		SELECT count(users_username)
-		FROM lecture_users
-		WHERE lecture_cno = #{cno}
+		SELECT count(user_username)
+		FROM user_lectures
+		WHERE lectures_cno = #{cno}
 	</select>
 	
 	<select id="selectIdList" resultType="string">
-		SELECT users_username
-		FROM lecture_users
-		WHERE lecture_cno = #{cno}
+		SELECT user_username
+		FROM user_lectures
+		WHERE lectures_cno = #{cno}
 	</select>
 
 </mapper>

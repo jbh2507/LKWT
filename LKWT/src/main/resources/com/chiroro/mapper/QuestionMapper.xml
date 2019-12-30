@@ -17,7 +17,7 @@
 	
 	<select id="selectList" resultMap="QeustionListMap">
 		SELECT  q.qno, cno cno, category category,  content content,  q.regdate regdate,
-			 CAST((COUNT(ano) / (SELECT COUNT(username) FROM student WHERE cno = #{no}) *100) AS signed integer) rate,
+			 CAST((COUNT(ano) / (SELECT COUNT(user_username) FROM user_lectures WHERE lectures_cno = #{no}) *100) AS signed integer) rate,
 			 CAST(AVG(indicator) AS signed integer) avg
 		FROM question q
 		LEFT JOIN answer a ON q.qno = a.qno
@@ -26,6 +26,22 @@
 		ORDER BY q.qno DESC
 		LIMIT #{limit}, #{amount}
 	</select>
+	
+	<select id="selectWhere" resultType="com.chiroro.domain.AnswerDataVO">
+		SELECT l.cname, q.qno, q.category tag, q.content, q.regdate, count(c.comment) comment,
+			(COUNT(a.ano) / (SELECT COUNT(user_username) FROM user_lectures WHERE lectures_cno = #{no}) *100) resRate,
+			AVG(indicator) resAvg
+		FROM question q
+		LEFT JOIN answer a ON q.qno = a.qno
+		LEFT JOIN lecture l ON q.cno = l.cno
+		LEFT JOIN ans_comment c ON a.ano = c.ano
+		WHERE q.cno = #{no}
+		AND q.category = #{tag}
+		GROUP BY q.qno
+		ORDER BY q.qno DESC
+	</select>
+	
+	
 	
 	<resultMap type="com.chiroro.domain.QuestionListVO" id="QeustionListMap">
 		<id column="qno" property="question.qno"/>

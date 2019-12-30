@@ -1,5 +1,10 @@
 package com.chiroro.domain;
 
-public class ClassVO {
+import lombok.Data;
 
+@Data
+public class ClassVO {
+	
+	private Long cno;
+	private String cname;
 }

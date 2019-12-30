@@ -57,5 +57,10 @@ public class UserRepositoryTests {
         
         repo.save(user);
     }
+
+    @Test
+    public void selectTest(){
+        repo.findById("tester");
+    }
     
 }

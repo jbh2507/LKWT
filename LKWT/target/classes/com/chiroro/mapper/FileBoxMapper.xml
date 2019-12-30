@@ -64,10 +64,10 @@
 	
 	<select id="selectList" resultMap="fileboxListMap">
 		SELECT b.bno, b.title, b.reg_date regdate, 
-			CAST((COUNT(fno) / (SELECT COUNT(username) FROM student WHERE lecture_cno = #{no}) *100) AS signed integer) rate
+			CAST((COUNT(fno) / (SELECT COUNT(user_username) FROM user_lectures WHERE lectures_cno = #{no}) *100) AS signed integer) rate
 		FROM filebox b
 		LEFT JOIN file f ON b.bno = f.file_box_bno
-		WHERE lecture_cno = #{no}
+		WHERE b.lecture_cno = #{no}
 		AND tag = #{tag}
 		<include refid="where"/>
 		GROUP BY b.bno
