@@ -7,12 +7,11 @@ function createChart(selctor, data) {
 	var $selector = $(selctor);
 	// 2. Use the margin convention practice 
 	var margin = {top: 50, right: 50, bottom: 50, left: 50}
-	  , width = $selector.innerWidth() - margin.left - margin.right // Use the window's width 
-	  , height = $selector.innerHeight() - margin.top - margin.bottom; // Use the window's height
+	  , width = $selector.innerWidth() - margin.left - margin.right // Use the selector's width 
+	  , height = $selector.innerHeight() - margin.top - margin.bottom; // Use the selector's height
 
 	// The number of datapoints
-	//var n = data.length;
-	var n = 50;
+	var n = data.length;
 
 	// 5. X scale will use the index of our data
 	var xScale = d3.scaleLinear()

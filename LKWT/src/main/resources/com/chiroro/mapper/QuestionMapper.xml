@@ -27,6 +27,7 @@
 		LIMIT #{limit}, #{amount}
 	</select>
 	
+	<!--  
 	<select id="selectWhere" resultType="com.chiroro.domain.AnswerDataVO">
 		SELECT l.cname, q.qno, q.category tag, q.content, q.regdate, count(c.comment) comment,
 			(COUNT(a.ano) / (SELECT COUNT(user_username) FROM user_lectures WHERE lectures_cno = #{no}) *100) resRate,
@@ -40,8 +41,48 @@
 		GROUP BY q.qno
 		ORDER BY q.qno DESC
 	</select>
+	-->
 	
-	
+	<select id="selectData" resultType="com.chiroro.domain.AnswerDataVO">
+		SELECT AVG(a.indicator) resAvg, COUNT(c.`comment`) countOfComment, MIN(q.qno) qno, MIN(q.regdate) minDate
+		FROM lecture l
+		JOIN lectures_teacher t ON l.cno = t.cno
+		LEFT JOIN question q ON l.cno = q.cno
+		LEFT JOIN answer a ON q.qno = a.qno
+		LEFT JOIN ans_comment c ON a.ano = c.ano
+		WHERE t.username = #{userName}
+		AND q.category = #{tag}
+		AND q.regdate BETWEEN #{startDate} AND #{endDate}
+		
+		<choose>
+			<when test="category == 'sno'">
+				AND l.sno = #{keyword}
+			</when>
+			<when test="category == 'cno'">
+				AND q.cno = #{keyword}
+			</when>
+			<when test="category == 'user'">
+				AND a.username = #{keyword}
+			</when>
+		</choose>
+		GROUP BY
+		<choose>
+			<when test="groupBy == 'dayOfYear'">
+				q.day_of_year
+			</when>
+			<when test="groupBy == 'dayOfWeek'">
+				q.day_of_week
+			</when>
+			<when test="groupBy == 'weekOfYear'">
+				q.week_of_year
+			</when>
+			<when test="groupBy == 'qno'">
+				q.qno
+			</when>
+		</choose>
+		ORDER BY minDate
+		LIMIT 0, 100
+	</select>
 	
 	<resultMap type="com.chiroro.domain.QuestionListVO" id="QeustionListMap">
 		<id column="qno" property="question.qno"/>

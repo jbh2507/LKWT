@@ -13,9 +13,9 @@ import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.AnswerVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
+import com.chiroro.dto.DataSearchDTO;
 import com.chiroro.dto.PageDTO;
 import com.chiroro.dto.PagingSource;
-import com.chiroro.dto.SearchDTO;
 import com.chiroro.mapper.AnsCommentMapper;
 import com.chiroro.mapper.AnswerMapper;
 import com.chiroro.mapper.QuestionMapper;
@@ -82,9 +82,9 @@ public class FeedbackServiceImpl implements FeedbackService{
 	}
 	
 	@Override
-	public List<AnswerDataVO> getQuestionList(SearchDTO dto){
+	public List<AnswerDataVO> getQuestionData(DataSearchDTO dto){
 		
-		return questionMapper.selectWhere(dto);
+		return questionMapper.selectData(dto);
 	}
 
 }

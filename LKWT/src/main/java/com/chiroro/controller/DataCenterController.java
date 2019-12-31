@@ -16,10 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.ClassVO;
-import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.domain.UserDetailVO;
-import com.chiroro.dto.SearchDTO;
+import com.chiroro.dto.DataSearchDTO;
 import com.chiroro.service.FeedbackService;
 
 import lombok.Setter;
@@ -40,20 +39,16 @@ public class DataCenterController {
 		return "/datacenter/center";
 	}
 	
-	@GetMapping("/questionlist")
+	@GetMapping("/getData")
 	@ResponseBody
-	public ResponseEntity<List<AnswerDataVO>> GETQuestionList(SearchDTO dto){
+	public ResponseEntity<List<AnswerDataVO>> GETQuestionList(DataSearchDTO dto){
 		
 		Authentication authen = SecurityContextHolder.getContext().getAuthentication();
-		List<ClassVO> classList = ((UserDetailVO)authen.getPrincipal()).getLectures();
+		String userName = ((UserDetailVO)authen.getPrincipal()).getUsername();
+		dto.setUserName(userName);
 		
-		boolean isNonExist = true;
-		for(ClassVO vo : classList) {
-			if(vo.getCno() == dto.getNo()) isNonExist = false;
-		}
-		if(isNonExist) throw new IllegalArgumentException("user can not access to cno: "+ dto.getNo());
 		
-		List<AnswerDataVO> result = feedService.getQuestionList(dto);
+		List<AnswerDataVO> result = feedService.getQuestionData(dto);
 		
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}

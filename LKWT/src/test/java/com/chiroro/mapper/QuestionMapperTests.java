@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.chiroro.domain.AnswerDataVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
+import com.chiroro.dto.DataSearchDTO;
 import com.chiroro.dto.PagingSource;
 
 import lombok.extern.log4j.Log4j;
@@ -75,5 +77,16 @@ public class QuestionMapperTests {
 			log.info(vo);
 			log.info("==================");	
 		});
+	}
+	
+	@Test
+	public void selectDataTest() {
+		DataSearchDTO dDto = new DataSearchDTO();
+		dDto.setUserName("testeacher");
+		dDto.setCategory("cno");
+		dDto.setKeyword("1");
+		List<AnswerDataVO> result = mapper.selectData(dDto);
+		
+		result.forEach(log::info);
 	}
 }

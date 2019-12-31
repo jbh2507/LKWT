@@ -1,13 +1,15 @@
 package com.chiroro.domain;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data
 public class AnswerDataVO {
-	private String cname, content, tag;
 	private Long qno;
-	private Boolean comment;
-	private Double resAvg, resRate;
+	private Double resAvg;
+	private Date minDate;
+	private Integer countOfComment;
 	
 	public AnswerDataVO() {
 		resAvg = 0.0;
