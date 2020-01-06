@@ -6,7 +6,8 @@ import lombok.Data;
 
 @Data
 public class RoleVO implements GrantedAuthority{
-
+	private String userName;
+	
 	private String authority;
 	
 	@Override

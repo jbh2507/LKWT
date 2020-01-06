@@ -12,8 +12,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.chiroro.domain.AnsCommentVO;
 import com.chiroro.domain.AnswerDataVO;
+import com.chiroro.domain.AnswerVO;
 import com.chiroro.domain.QuestionListVO;
 import com.chiroro.domain.QuestionVO;
 import com.chiroro.dto.DataSearchDTO;
@@ -29,13 +32,21 @@ public class QuestionMapperTests {
 	@Autowired
 	private QuestionMapper mapper;
 	
+	@Autowired
+	private AnswerMapper amapper;
+	
+	@Autowired
+	private AnsCommentMapper cmapper;
+	
 	private QuestionVO vo;
 	
 	@Before
 	public void ready() {
 		vo = new QuestionVO();
 		vo.setCno(1L);
-		vo.setCategory("진행도");
+		String category = "진행도";
+		if(Math.random() > 0.5) category = "이해도";
+		vo.setCategory(category);
 	}
 	
 	@Test
@@ -47,8 +58,35 @@ public class QuestionMapperTests {
 	public void insertTest() {
 		
 		IntStream.range(0, 201).forEach(i->{
-			vo.setContent("test P: "+i);
-			mapper.insert(vo);			
+			log.info(""+i);
+			vo.setContent("test Q: "+i);
+			mapper.insert(vo);
+			
+			
+			PagingSource source = new PagingSource();
+			source.setNo(1L);
+			
+			long qno = mapper.selectList(source).get(0).getQuestion().getQno();
+			AnswerVO avo = new AnswerVO();
+			for(int j=0; j<11; j++) {
+				String userName = "tester"+(char)('A'+j);
+				avo.setQno(qno);
+				avo.setUsername(userName);
+				avo.setIndicator((int)(Math.random()*5)*25);
+				
+				amapper.insert(avo);
+				
+				if(Math.random() < 0.2) {
+					AnsCommentVO cvo = new AnsCommentVO();
+					cvo.setTag("TEST");
+					cvo.setComment("it is test answer comment");
+					cmapper.insert(cvo);
+				}
+				
+			}
+			
+			
+			
 		});
 		
 	}

@@ -18,7 +18,7 @@
 		<security:intercept-url pattern="/login"
 			access="permitAll" />
 		<security:intercept-url pattern="/resource/**"
-			access="hasRole('ROLE_TEACHER')" />
+			access="permitAll" />
 		<security:intercept-url pattern="/feedback/**"
 			access="hasRole('ROLE_TEACHER')" />
 		<security:intercept-url pattern="/task/**"

@@ -6,7 +6,7 @@
 <mapper namespace="com.chiroro.mapper.StudentMapper">
 
 	<insert id="insert">
-		INSERT INTO user_lectures
+		INSERT INTO user_lectures(lectures_cno, user_username)
 		VALUES(#{cno}, #{userName})
 	</insert>
 	

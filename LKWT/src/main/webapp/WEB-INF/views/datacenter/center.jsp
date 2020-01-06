@@ -73,6 +73,27 @@
           <h1 class="h3 mb-2 text-gray-800">DataCenter</h1>
           <p class="mb-4">피드백 정보를 시각화해 제공합니다</p>
 
+		  <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Select View</h6>
+                </div>
+                <div class="card-body">
+                <div>
+                  <div class="dropdown no-arrow mb-4">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown (no arrow)
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                  </div>
+                  Add the <code>.no-arrow</code> class alongside the <code>.dropdown</code>
+                </div>
+              </div>
+             </div>
+	
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
