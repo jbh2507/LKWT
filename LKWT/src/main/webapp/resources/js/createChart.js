@@ -2,9 +2,11 @@
  * 
  */
 
-function createChart(selctor, data) {
+function createChart(selctor, data, isQno) {
 	
 	var $selector = $(selctor);
+	
+	$selector.html("");
 	// 2. Use the margin convention practice 
 	var margin = {top: 50, right: 50, bottom: 50, left: 50}
 	  , width = $selector.innerWidth() - margin.left - margin.right // Use the selector's width 
@@ -12,6 +14,8 @@ function createChart(selctor, data) {
 
 	// The number of datapoints
 	var n = data.length;
+	
+	var endDate
 
 	// 5. X scale will use the index of our data
 	var xScale = d3.scaleLinear()
@@ -20,7 +24,7 @@ function createChart(selctor, data) {
 
 	// 6. Y scale will use the randomly generate number 
 	var yScale = d3.scaleLinear()
-	    .domain([0, 1]) // input 
+	    .domain([0, 100]) // input 
 	    .range([height, 0]); // output 
 
 	// 7. d3's line generator
@@ -49,6 +53,7 @@ function createChart(selctor, data) {
 	svg.append("g")
 	    .attr("class", "y axis")
 	    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+	
 
 	// 9. Append the path, bind the data, and call the line generator 
 	svg.append("path")
@@ -66,7 +71,17 @@ function createChart(selctor, data) {
 	    .attr("r", 5)
 	      .on("mouseover", function(a, b, c) { 
 	  			console.log(a) 
-	        $(this).attr('class', 'focus')
+	  			
+	  			var ainfo = ""
+	  			if(isQno) ainfo += "no: "+a.qno
+	  			ainfo += " 평균치: "+a.resAvg
+	  			ainfo += " 날짜: "+new Date(a.minDate).toLocaleDateString()
+	  			
+	  			$("#chartinfo").html(ainfo)
+	        //$(this).attr('class', 'focus')
 			})
 	      .on("mouseout", function() {  })
+	      
+	 
+	 $selector.append("<div id='chartinfo' class='ml-4 mb-3'></div>")
 }

@@ -12,18 +12,18 @@
 
 <select id="selectDetail" resultMap="detailMap">
 	SELECT u.username, u.password, u.enabled, u.account_non_expired, u.account_non_locked,
-		 u.credentials_non_expired, u.regdate,	a.authority, l.cno, l.cname
+		 u.credentials_non_expired, u.regdate,	a.authority, i.cno, l.cname
     from
         user u
     left join
         authorities a
             on u.username = a.username 
     left join
-        user_lectures i
-            on u.username = i.user_username 
+        lectures_teacher i
+            on u.username = i.username 
     left outer join
         lecture l
-            on i.lectures_cno = l.cno 
+            on i.cno = l.cno 
     where
         u.username= #{username}
 </select>

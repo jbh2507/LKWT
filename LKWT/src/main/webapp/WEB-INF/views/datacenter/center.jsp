@@ -79,17 +79,43 @@
                 </div>
                 <div class="card-body">
                 <div>
-                  <div class="dropdown no-arrow mb-4">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Dropdown (no arrow)
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);">
-                      <a class="dropdown-item" href="#">Action</a>
-                      <a class="dropdown-item" href="#">Another action</a>
-                      <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                  </div>
-                  Add the <code>.no-arrow</code> class alongside the <code>.dropdown</code>
+                	<form id="dataForm">
+                		<div class="form-group row">
+	                		<label>groupBy: <select id="formGroupBy"  name="groupBy">
+	                			<option value="dayOfYear">일</option>
+	                			<option value="weekOfYear">주</option>
+	                			<option value="dayOfWeek">요일</option>
+	                			<option value="qno">개별</option>
+	                		</select></label>
+	                		
+	                		<div>
+	                			<label><input type="radio" name="tag" value="이해도">이해도</label>
+	                			<label><input type="radio" name="tag" value="진행도">진행도</label>
+	                		</div>
+                		
+                		</div>
+                		
+                		<div class="form-group row">
+	                		<label>search: <select id="formCategory" class="form-group" name="category">
+	                			<option value="">전체</option>
+	                			<option value="sno">과목</option>
+	                			<option value="cno">차시</option>
+	                			<option value="user">학생ID</option>
+	                		</select>
+	                		
+	                		<input id="formKeyword" type="text" name="keyword"></label>
+                		</div>
+                		
+                		<div class="form-group row">
+	                		<label>range: <input id="formStartDate" type="date" name="startDate"> ~
+	                		<input id="formEndDate" type="date" name="endDate"></label>
+                		</div>
+                		
+                		<button id="formBtn">조회</button>
+                	</form>
+                </div>
+                <div id="chartAreaOne" style="height: 30em">
+        
                 </div>
               </div>
              </div>
@@ -99,7 +125,7 @@
             <div class="card-header py-3">
               <h6 class="m-0 font-weight-bold text-primary">바로보기 차트</h6>
             </div>
-            <div id="chartAreaOne" class="card-body" style="height: 30em">
+            <div class="card-body" style="height: 30em">
      
 
             </div><!-- card body -->
@@ -162,8 +188,13 @@ $(document).ready(function() {
 	const $qRegDate = $('#qRegDate');
 	const $qCategory = $('#qCategory');
 	
+	const $dataForm = $("#dataForm")
+	const $groupByForm = $("#formGroupBy")
+	const $categoryForm = $("#formCategory")
+	const $keywordForm = $("#formKeyword")
+	const $startDateForm = $("#formStartDate")
+	const $endDateForm = $("#formEndDate")
 	
-	callData("#chartAreaOne", 1);
 	
 	function addAnswer(an){
 		var answerForm =
@@ -212,17 +243,14 @@ $(document).ready(function() {
 		});
 	};
 	
-	function callData(selector, no, tag, category, keyword){
+	function callData(selector, groupBy, startDate, endDate, tag, category, keyword){
 		
-		var url = "/datacenter/questionlist?no="+no
 		
-		if(tag != null) url += "&tag="+tag;
-		if(category != null) url += "&category="+category;
-		if(keyword != null) url += "&keyword="+keyword;
 		
 		$.ajax({
 			url: url,
 			type:"GET",
+			data: data,
 			dataType:"json",
 			success: function (result) {
 				createChart(selector, result);
@@ -254,6 +282,34 @@ $(document).ready(function() {
 		
 		$pop.show();
 	}
+	
+	$("#formBtn").on("click", function(e){
+		e.preventDefault();
+		
+		var selector = "#chartAreaOne"
+		
+		var data = "?groupBy="+$groupByForm.val()+"&tag="+$("input[name='tag']:checked", "#dataForm").val()
+				
+		var category = $categoryForm.val()
+		var keyword = $keywordForm.val()
+		if(category.length != 0) data += "&category="+category+"&keyword="+keyword
+		
+		var startDate = $startDateForm.val()
+		var endDate = $endDateForm.val()
+		
+		if(endDate - startDate > 0) data += "&startDate="+startDate+"&endDate="+endDate
+		
+		var isQno = $groupByForm.val() == 'qno';
+
+		$.ajax({
+			url: "/datacenter/getData"+data,
+			type:"GET",
+			dataType:"json",
+			success: function (result) {
+				createChart(selector, result, isQno);
+			}
+		});
+	});
 	
 	// 팝업
 	$("#listBody").on("click", "tr td a", function (e) {

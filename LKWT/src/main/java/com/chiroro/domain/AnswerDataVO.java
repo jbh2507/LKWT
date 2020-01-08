@@ -16,6 +16,6 @@ public class AnswerDataVO {
 	}
 	
 	public double getY() {
-		return resAvg/100.0;
+		return resAvg;
 	} 
 }

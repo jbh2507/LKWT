@@ -59,7 +59,7 @@
 				AND l.sno = #{keyword}
 			</when>
 			<when test="category == 'cno'">
-				AND q.cno = #{keyword}
+				AND( l.cno = #{keyword} OR l.cname = #{keyword})
 			</when>
 			<when test="category == 'user'">
 				AND a.username = #{keyword}

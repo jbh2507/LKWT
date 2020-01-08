@@ -289,7 +289,7 @@ $(document).ready(function() {
 			data: formData,
 			enctype: 'multipart/form-data',
 			processData: false,
-	        contentType: false,
+	        contentType: false
 		});
 		
 		$regPop.hide();

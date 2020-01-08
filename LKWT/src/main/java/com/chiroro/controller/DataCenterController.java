@@ -42,6 +42,7 @@ public class DataCenterController {
 	@GetMapping("/getData")
 	@ResponseBody
 	public ResponseEntity<List<AnswerDataVO>> GETQuestionList(DataSearchDTO dto){
+	
 		
 		Authentication authen = SecurityContextHolder.getContext().getAuthentication();
 		String userName = ((UserDetailVO)authen.getPrincipal()).getUsername();
